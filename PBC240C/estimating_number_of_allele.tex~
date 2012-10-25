@@ -1,0 +1,19 @@
+\documentclass[12pt]{article}
+
+\usepackage{mcgill}
+
+\begin{document}
+ Given a (sub)population of size $n$, and a count $X=(X_A, X_{B}, X_{AB}, X_{O})$ of the number of individuals with blood type $A$, $B$, $AB$ or $O$; under the mild assumption that each blood type is equally likely to be encountered, we may consider $X \sim$ Multinom$(n,p_{A}, p_{B}, p_{AB}, p_{O})$. 
+
+Furthermore, we may decompose the event of an individual being of type $A$ into the disjoint union of the events that he/she has genotype $AA$ or $AO$. Hence, $p_{A} = \pi_{AA} + \pi_{AO}$. Similarly, we may write $p_{B} = \pi_{BB} + \pi_{BO}$. Thus, we may write the likelihood function of $X$ as 
+\[
+L_{n}(X) \propto (\pi_{AA} + \pi_{AO})^{X_A}(\pi_{BB} + \pi_{BO})^{X_B}p_{AB}^{X_{AB}} p_{O}^{X_{O}}
+\]
+and assuming one can perform an MLE-style optimization for parameters $(\pi_{AA},\pi_{AO},\pi_{BB},\pi_{BO},p_{AB},p_{O})\in[0,1]^{6}$ we may estimate the count of (say) the $A$ alleles in the following way:
+\begin{align*}
+\#\text{ of A's} &= 2 \cdot X_{A} \cdot \text{frequency}_{AA} + X_{A} \cdot \text{frequency}_{AO} + X_{AB} \\
+&\approx 2 X_{A} \frac{\hat{\pi}_{AA}}{\hat{\pi}_{AA} + \hat{\pi}_{AO}} + X_{A} \frac{\hat{\pi}_{AO}}{\hat{\pi}_{AA} + \hat{\pi}_{AO}} + X_{AB}
+\end{align*}
+since $\hat{\pi}_{AA} + \hat{\pi}_{AO} = \hat{p}_{A}$ and thus ${\hat{\pi}_{AA}}/(\hat{\pi}_{AA} + \hat{\pi}_{AO})$ should estimate $\pi_{AA}/p_{A}$ which is the proportion of people with genotype $AA$ inside populations of people with blood type $A$. 
+
+\end{document}
