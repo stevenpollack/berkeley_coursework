@@ -1,0 +1,102 @@
+\documentclass{article}
+
+\usepackage{mcgill,palatino}
+
+\begin{document}
+
+\begin{enumerate}
+\item[c)]
+<<estimators,echo=3:25,comment=NA>>=
+library(ggplot2)
+
+set.seed(112)
+
+r <- round(runif(n=1,min=2,max=5),digits=2) # r = 3.13
+lambda <- round(runif(n=1,min=1,max=2),digits=2) # lambda = 1.92
+
+n <- 100
+X <- rgamma(n=n,shape=r,rate=lambda)
+mu_hat_1 <- (1/n)*sum(X^1)
+mu_hat_2 <- (1/n)*sum(X^2)
+
+r_hat <-  (mu_hat_1^2)/(mu_hat_2 - mu_hat_1^2) # r_hat = 4.097228
+print(abs(r-r_hat))
+lambda_hat <- mu_hat_1/(mu_hat_2 - mu_hat_1^2) # lambda_hat = 2.603451
+print(abs(lambda-lambda_hat))
+@
+
+\begin{figure}[htb]
+\centering
+<<plots, dev='pdf', out.width='0.8\\textwidth', echo=FALSE,comment=NA>>=
+p1 <- ggplot(data.frame(x=c(0,5))) + geom_histogram(aes(x = X, y = ..density..), alpha = 0.25, binwidth=0.3333) + stat_function(fun=dgamma, arg=list(shape=r,rate=lambda),colour="darkgreen") 
+print(p1)
+@
+\caption{Histogram of $n = \Sexpr{n}$ iid samples from $\Gamma$($r$=\Sexpr{r}, $\lambda$=\Sexpr{lambda}) with density overlayed.}
+\end{figure}
+
+While it's clear that my histogram resembles the density of our sample distribution (though, it could stand to resemble it more closely), I'm remiss to say my estimators are not very close to their targets\ldots. 
+
+\item[d)]
+<<partD, echo=FALSE>>=
+generateEstimators <- function(n,r,lambda) {
+  X <- rgamma(n=n,shape=r,rate=lambda)
+  mu_hat_1 <- (1/n)*sum(X^1)
+  mu_hat_2 <- (1/n)*sum(X^2)
+  r_hat <-  (mu_hat_1^2)/(mu_hat_2 - mu_hat_1^2)
+  lambda_hat <- mu_hat_1/(mu_hat_2 - mu_hat_1^2)
+  return(c(r_hat,lambda_hat))
+}
+
+times <- 999
+
+more_estimators <- t(mapply(FUN=generateEstimators, n=rep(n,times=times),r=rep(r,times=times),lambda=rep(lambda,times=times)))
+
+r_hat <- c(r_hat,more_estimators[,1])
+lambda_hat <- c(lambda_hat, more_estimators[,2])
+@
+
+The mean our 1000 estimations of $r$ and $\lambda$ are \Sexpr{mean(r_hat)} and \Sexpr{mean(lambda_hat)}, respectively. The SD of our the 1000 estimations is \Sexpr{sqrt(var(r_hat))} and \Sexpr{sqrt(var(lambda_hat))}.  
+
+\begin{figure}[ht!]
+\centering
+<<partDPlots,out.width='0.65\\textwidth',echo=FALSE>>=
+p2 <- ggplot() + geom_histogram(aes(x = r_hat, y = ..density..), alpha = 0.25, binwidth=0.2)
+print(p2)
+@ %
+<<partDPlots2,out.width='0.65\\textwidth', echo=FALSE>>=
+p3 <- ggplot() + geom_histogram(aes(x = lambda_hat, y = ..density..), alpha = 0.25, binwidth=0.18)
+print(p3)
+@
+\caption{Histograms for $\hat{r}$ and $\hat{\lambda}$ when $n=100$}
+\end{figure}
+\end{enumerate}
+
+\paragraph{\#9.}
+
+<<prob9,echo=FALSE>>=
+n <- 1e3
+times <- 1e3
+
+new_estimators <- t(mapply(FUN=generateEstimators, n=rep(n,times=times),r=rep(r,times=times),lambda=rep(lambda,times=times)))
+
+r_hat <- new_estimators[,1]
+lambda_hat <- new_estimators[,2]
+@
+
+The mean our \textit{new} 1000 estimations of $r$ and $\lambda$ are \Sexpr{mean(r_hat)} and \Sexpr{mean(lambda_hat)}, respectively. The SD of our the 1000 estimations is \Sexpr{sqrt(var(r_hat))} and \Sexpr{sqrt(var(lambda_hat))}. It seems that our estimators are, indeed, converging to their targets. I'm willing to say this is most likely a consequence of the fact that $\hat{\mu}_{k} \to E(X^k)$ with whatever speed the weak-law of large numbers affords us.
+
+\begin{figure}[ht!]
+\centering
+<<prob9Plots,out.width='0.65\\textwidth',echo=FALSE>>=
+p4 <- ggplot() + geom_histogram(aes(x = r_hat, y = ..density..), alpha = 0.25, binwidth=0.05)
+print(p4)
+@ %
+<<prob9Plots2,out.width='0.65\\textwidth', echo=FALSE>>=
+p4 <- ggplot() + geom_histogram(aes(x = lambda_hat, y = ..density..), alpha = 0.25, binwidth=0.033)
+print(p4)
+@
+\caption{Histograms for $\hat{r}$ and $\hat{\lambda}$ when $n=1000$}
+\end{figure}
+
+
+\end{document}

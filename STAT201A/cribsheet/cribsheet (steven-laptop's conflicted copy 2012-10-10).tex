@@ -1,0 +1,83 @@
+\documentclass[10pt]{article}
+
+\usepackage{mcgill,palatino,multicol,tikz}
+
+\begin{document}
+ \begin{multicols}{2}
+\paragraph{check out:} 
+\begin{enumerate}
+\item sample mean, variance, moment (sample variance is $c \chi^{2}$)
+\item simple random sampling
+\item WLLN
+\item Chebyshev, Markov, Cauchy-Schwartz
+\end{enumerate}
+
+\paragraph{Change of variables:} given $Y = g(X)$, and $f_{X}(x)$ the density of $X$, 
+\[
+f_{Y}(y) = \sum_{x : g(x) = y} \frac{f_{X}(g^{-1}(y))}{\ord{\dfrac{dg}{dx}\biggr|_{x=g^{-1}(y)}}}
+\]
+
+Example: $X \sim N(0,1)$, and $Y = X^2$:
+\begin{enumerate}
+\item $\range(Y) = [0,\infty)$,
+\item $y=g(x) = x^2 \Implies g'(x) = 2x$, and beware: $x = \pm \sqrt{y}$.
+\item For $x  = \sqrt{y}$:
+\[
+\frac{(2\pi)^{-1/2} e^{-(\sqrt{y})^2/2}}{\ord{2 \sqrt{y}}} = \frac{e^{-y/2}}{\sqrt{2\pi}(2\sqrt{y})}
+\]
+For $x = -\sqrt{y}$:
+\[
+ \frac{(2\pi)^{-1/2} e^{-(-\sqrt{y})^2/2}}{\ord{-2 \sqrt{y}}} = \frac{e^{-y/2}}{\sqrt{2\pi}(2\sqrt{y})}
+\]
+Hence,
+\[
+f_{Y}(y) = \frac{e^{-y/2}}{\sqrt{2\pi}(2\sqrt{y})} + \frac{e^{-y/2}}{\sqrt{2\pi}(2\sqrt{y})} = \frac{y^{-1/2}e^{-y/2}}{\sqrt{2\pi}} 
+\]
+\end{enumerate}
+
+\paragraph{Convolution:} for $X \orth Y$, if $W = X+Y$, then
+\begin{align*}
+f_{W}(w) &= \int_{supp(Y)}f_{X,Y}(w-y,y) \, dy \\
+ &= \int_{supp(X)}f_{X,Y}(x,w-x) \, dx \\
+&= \int_{supp(X)}f_{X}(x)f_{Y}(w-x) \, dx \\
+&= f_{X}*f_{Y}(w)
+\end{align*}
+
+\paragraph{Poisson Process:} if $N_{(0,1)} =$ \# of arrivals in $(0,1)$, and $N_{(0,1)} \sim$ Poisson$(\lambda)$, then $N_{(0,t)} \sim$ Poisson$(\lambda t)$. If $T_1$ is the time until the first arrival, then $T_1 \sim$ Exp($\lambda$). Hence, if $T_{r}$ is time until $r^{th}$ arrival, $T_r = W_1 + W_2 + \cdots + W_r$ where $W_i \iid$ Exp($\lambda)$, hence $T_{r} \sim \Gamma(r,\lambda)$.   
+
+\paragraph{``Thinning'' the Poisson Process:} Given a Poisson process with rate $\lambda$, and supposing each arrival is killed with probability $p$ (independent of the rest of process), if $X$ is the Poisson process for the particles who live and $Y$ is for the particles who die, $X \orth Y$, $X \sim$ Poisson($\lambda q$), $Y \sim$ Poisson($\lambda p$). Think about this like a random generator spits out particles of type A or B, with the chance of $A$ being $p$. Then, provided the generic observational random variable is Poisson($\lambda$), the type A observational random variable will be Poisson($\lambda p$). 
+ 
+\paragraph{$\Gamma$ tricks:} Given $Z \sim N(0,1)$, $Z^2 \sim \chi^{2}_{(1)} = \Gamma(1/2,1/2)$. But, $X_1 \orth X_2$, $X_i \sim \Gamma(r_i, \lambda)$ has that $X_1 + X_2 \sim \Gamma(r_1 + r_2, \lambda)$. Hence, for $Z_i \iid N(0,1)$, $\SUM{i}{1}{n} Z_i^2 \sim \chi_{(n)}^{2} = \Gamma(n/2, 1/2)$. 
+
+\paragraph{Moments:}
+\begin{enumerate}
+\item $\mu_{k} = E(X^{k})$ (doesn't always exist)
+\item if $j < k$ and $\mu_{k}$ exists, then $\mu_{j}$ exists. 
+\end{enumerate}
+
+\paragraph{MGF:}
+\begin{enumerate}
+\item $\psi_{X} = E(e^{tX})$ (doesn't always exist)
+\item $\psi(0) = 1$
+\item $\psi_{aX+b}(t) = e^{tb}\psi_{X}(at)$
+\item If $X \orth Y$, $\psi_{X+Y}(t) = \psi_{X}(t) \psi_{Y}(t)$
+\item If $\psi_{X}(t)$ exists in a nhd of 0, $\mu_{k} = \psi_{X}^{(k)}(0) < \infty$, for all $k \in \N$. (Inspiration for $E(e^{tx}) = \SUM{k}{0}{\infty} E(X^{k}) t^{k}/k!$.)
+\item $\psi_{X}, \psi_{Y}$ existing in nhd of 0 and $\psi_{X} \equiv \psi_{Y}$ implies $X \sim Y$. 
+\item If $\set{X_n}$ is a sequence of RV's and $\psi_{X_n} \to \psi_{X}$ a.e. in a nhd of 0, then $X_n \xrightarrow{\L} X$. That is, $F_{X_n} \to F_{X}$ at all points of continuity of $F_{X}$.
+\end{enumerate}
+
+\paragraph{Common MGF's:}
+\[
+\begin{tabular}{l|c}
+$X$ & $\psi_{X}(t)$ \\
+\hline %
+$c$, constant & $e^{ct}$ \\
+$I_{A}, \; P(A) = p$ & $p{e^{t}} + q$ \\
+Binom$(n,p)$ & $(pe^t + q)^n$ \\
+$N(\mu,\sigma^2)$ & $\exp\set{\mu t + \sigma^2 t/2}$ \\
+Exp$(\lambda)$ & $\lambda(\lambda-t)^{-1} I(t < \lambda)$ \\
+$\Gamma(r,\lambda)$ & $\lambda^{r}(\lambda-t)^{-r} I(t < \lambda)$
+\end{tabular}
+\]
+\end{multicols}
+\end{document}

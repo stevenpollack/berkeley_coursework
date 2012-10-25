@@ -1,0 +1,227 @@
+\documentclass[10pt]{article}
+
+\usepackage{mcgill,palatino,multicol,tikz}
+
+\DeclareMathOperator{\argmin}{argmin}
+
+\begin{document}
+ \begin{multicols}{2}
+\paragraph{check out:} 
+\begin{enumerate}
+\item sample mean, variance, moment (sample variance is $c \chi^{2}$)
+\item simple random sampling
+\item densities of quotients
+\item Chebyshev, Markov, Cauchy-Schwartz
+\end{enumerate}
+
+\paragraph{Samples:} Given $X_1, X_2, \ldots, X_n \sim F$ a sample of size $n$ from a population of size $N$.
+\begin{enumerate}
+\item $\bar{X}_{n} = n^{-1} \SUM{i}{1}{n} X_i$ is the sample mean; $E(\bar{X}_{n}) = \mu$, $\var(\bar{X}_{n}) = n^{-1}\sigma^2$, if without replacement, and $n^{-1}\sigma^2(N-n)/(N-1)$ if there's replacement. 
+\item Application of above: $I_j$ are dependent indicator random variables with success $p$, then $\SUM{i}{1}{n} I_i \sim$ HypGeo$(N,p,n)$, and $G_i \iid$ Geo$(p)$, $\SUM{i}{1}{n} G_i \sim$ NBinom$(n,p)$. 
+\item $\hat{\sigma}^2 = n^{-1}\SUM{i}{1}{n} (X_i - \bar{X}_{n})^2$ is the sample variance. $E(\hat{\sigma}^2) = \frac{n-1}{n}\sigma^{2}$. For $X_i$ iid, $S^2 = \frac{n}{n-1}\hat{\sigma}^{2} \sim c \chi_{(n-1)}^{2}$ which allows us to say that $(\bar{X}_{(n)} - \mu)/(S/\sqrt{n}) \sim t_{(n-1)}$. 
+\end{enumerate}
+
+
+
+\paragraph{Inequalities:}
+\begin{enumerate}
+\item given $X \geq 0$, $c > 0$, $P( X \geq c) \leq \mu_{X}/c$
+\item need sd to exist, $P(\ord{X-\mu_{X}} \geq k\sigma) \leq k^{-2}$
+\item $E(XY) \leq \sqrt{E(X^2) E(Y^2)}$
+\end{enumerate}
+
+
+\paragraph{Change of variables:} given $Y = g(X)$, and $f_{X}(x)$ the density of $X$, 
+\[
+f_{Y}(y) = \sum_{x : g(x) = y} \frac{f_{X}(g^{-1}(y))}{\ord{\dfrac{dg}{dx}\biggr|_{x=g^{-1}(y)}}}
+\]
+
+Example: $X \sim N(0,1)$, and $Y = X^2$:
+\begin{enumerate}
+\item $\range(Y) = [0,\infty)$,
+\item $y=g(x) = x^2 \Implies g'(x) = 2x$, and beware: $x = \pm \sqrt{y}$.
+\item For $x  = \sqrt{y}$:
+\[
+\frac{(2\pi)^{-1/2} e^{-(\sqrt{y})^2/2}}{\ord{2 \sqrt{y}}} = \frac{e^{-y/2}}{\sqrt{2\pi}(2\sqrt{y})}
+\]
+For $x = -\sqrt{y}$:
+\[
+ \frac{(2\pi)^{-1/2} e^{-(-\sqrt{y})^2/2}}{\ord{-2 \sqrt{y}}} = \frac{e^{-y/2}}{\sqrt{2\pi}(2\sqrt{y})}
+\]
+Hence,
+\[
+f_{Y}(y) = \frac{e^{-y/2}}{\sqrt{2\pi}(2\sqrt{y})} + \frac{e^{-y/2}}{\sqrt{2\pi}(2\sqrt{y})} = \frac{y^{-1/2}e^{-y/2}}{\sqrt{2\pi}} 
+\]
+\end{enumerate}
+
+\paragraph{Convolution:} for $X \orth Y$, if $W = X+Y$, then
+\begin{align*}
+f_{W}(w) &= \int_{supp(Y)}f_{X,Y}(w-y,y) \, dy \\
+ &= \int_{supp(X)}f_{X,Y}(x,w-x) \, dx \\
+&= \int_{supp(X)}f_{X}(x)f_{Y}(w-x) \, dx \\
+&= f_{X}*f_{Y}(w)
+\end{align*}
+
+\paragraph{Quotient Density:} let $f(x,y)$ be the joint density of $(X,Y)$, then $Z=Y/X$ has density $\int_{-\infty}^{\infty} \ord{x} f(x,xz) \, dx$. 
+
+\paragraph{Poisson Process:} if $N_{(0,1)} =$ \# of arrivals in $(0,1)$, and $N_{(0,1)} \sim$ Poisson$(\lambda)$, then $N_{(0,t)} \sim$ Poisson$(\lambda t)$. If $T_1$ is the time until the first arrival, then $T_1 \sim$ Exp($\lambda$). Hence, if $T_{r}$ is time until $r^{th}$ arrival, $T_r = W_1 + W_2 + \cdots + W_r$ where $W_i \iid$ Exp($\lambda)$, hence $T_{r} \sim \Gamma(r,\lambda)$.   
+
+\paragraph{``Thinning'' the Poisson Process:} Given a Poisson process with rate $\lambda$, and supposing each arrival is killed with probability $p$ (independent of the rest of process), if $X$ is the Poisson process for the particles who live and $Y$ is for the particles who die, $X \orth Y$, $X \sim$ Poisson($\lambda q$), $Y \sim$ Poisson($\lambda p$). Think about this like a random generator spits out particles of type A or B, with the chance of $A$ being $p$. Then, provided the generic observational random variable is Poisson($\lambda$), the type A observational random variable will be Poisson($\lambda p$). 
+ 
+\paragraph{$\Gamma$ tricks:} Given $Z \sim N(0,1)$, $Z^2 \sim \chi^{2}_{(1)} = \Gamma(1/2,1/2)$. But, $X_1 \orth X_2$, $X_i \sim \Gamma(r_i, \lambda)$ has that $X_1 + X_2 \sim \Gamma(r_1 + r_2, \lambda)$. Hence, for $Z_i \iid N(0,1)$, $\SUM{i}{1}{n} Z_i^2 \sim \chi_{(n)}^{2} = \Gamma(n/2, 1/2)$. 
+
+\paragraph{Moments:}
+\begin{enumerate}
+\item $\mu_{k} = E(X^{k})$ (doesn't always exist)
+\item if $j < k$ and $\mu_{k}$ exists, then $\mu_{j}$ exists. 
+\end{enumerate}
+
+\paragraph{MGF:}
+\begin{enumerate}
+\item $\psi_{X} = E(e^{tX})$ (doesn't always exist)
+\item $\psi(0) = 1$
+\item $\psi_{aX+b}(t) = e^{tb}\psi_{X}(at)$
+\item If $X \orth Y$, $\psi_{X+Y}(t) = \psi_{X}(t) \psi_{Y}(t)$
+\item If $\psi_{X}(t)$ exists in a nhd of 0, $\mu_{k} = \psi_{X}^{(k)}(0) < \infty$, for all $k \in \N$. (Inspiration for $E(e^{tx}) = \SUM{k}{0}{\infty} E(X^{k}) t^{k}/k!$.)
+\item $\psi_{X}, \psi_{Y}$ existing in nhd of 0 and $\psi_{X} \equiv \psi_{Y}$ implies $X \sim Y$. 
+\item If $\set{X_n}$ is a sequence of RV's and $\psi_{X_n} \to \psi_{X}$ a.e. in a nhd of 0, then $X_n \xrightarrow{\L} X$. That is, $F_{X_n} \to F_{X}$ at all points of continuity of $F_{X}$.
+\end{enumerate}
+
+\paragraph{Common MGF's:}
+\begin{center}
+\begin{tabular}{l|c}
+$X$ & $\psi_{X}(t)$ \\
+\hline %
+$c$, constant & $e^{ct}$ \\
+$I_{A}, \; P(A) = p$ & $p{e^{t}} + q$ \\
+Binom$(n,p)$ & $(pe^t + q)^n$ \\
+Geo($p$) & $p e^{t}(1-qe^t)^{-1} I(t < -\ln(q))$ \\
+Poisson($\lambda$) & $\exp\set{\lambda(e^{t}-1)}$ \\
+Uniform($[a,b]$) & $(e^{tb}-e^{ta})/(t(b-a))$ \\
+$N(\mu,\sigma^2)$ & $\exp\set{t\mu + \frac{1}{2}\sigma^2t^2}$ \\ 
+$\chi_{(k)}^{2}$ & $(1-2t)^{-k/2}$ \\
+Exp$(\lambda)$ & $\lambda(\lambda-t)^{-1} I(t < \lambda)$ \\
+$\Gamma(r,\lambda)$ & $\lambda^{r}(\lambda-t)^{-r} I(t < \lambda)$
+\end{tabular}
+\end{center}
+
+\paragraph{Central Limit Theorem:} $X_1, X_2, \ldots$, iid with mean $\mu$ and sd $\sigma$. Given, $S_n = \SUM{i}{1}{n} X_i$,
+\[
+Z_n = \frac{n^{-1} S_n - \mu}{\sigma/\sqrt{n}} \xrightarrow{\L} N(0,1)
+\]
+$Z_n$ is $S_n$ converted to std. units, and proof uses MGF properties to show $\psi_{Z_n} \to e^{t^2/2}$.
+
+\paragraph{Types of Convergence:}
+\begin{enumerate}
+\item Quadratic Mean: \[X_n \xrightarrow{qm} X \EQ E\left[ (X_n - X)^2 \right] \to 0\]
+\item Probability:
+\[
+X_n \xrightarrow{P} X \EQ \forall \, \epsilon > 0, P\left(\ord{X_n-X} > \epsilon\right) \to 0
+\]
+\item Distribution:
+\[
+X_n \xrightarrow{\L} X \EQ F_{X_n} \to F_{X} \text{ at all points of continuity of $F_X$}
+\]
+\end{enumerate}
+
+\paragraph{Convergence relations:}
+\begin{enumerate}
+\item $X_n \xrightarrow{qm} X \stackrel{(1)}{\implies} X_{n} \xrightarrow{P} X \stackrel{(2)}{\implies} X_n \xrightarrow{\L} X$
+\item The converse to (2) is true if $X$ is a constant. Hence, $X_n \xrightarrow{P} c \EQ X_{n} \xrightarrow{\L} c$.
+\item Converse to (1) is not true:
+\[
+X_{n}(x) = n I(x \in (1-1/n,1])
+\]
+$X_n \xrightarrow{P} 0$, but $X_n \xrightarrow{qm} \infty$
+\item If $g$ is continuous, $X_n \xrightarrow{P} X$, then $g(X_n) \xrightarrow{P} g(X)$
+\item If $Y_n \xrightarrow{P} Y$, $X_n + Y_n \xrightarrow{P} X+ Y$ and $X_n Y_n \xrightarrow{P} XY$
+\item If $X_n \xrightarrow{qm} X$, $Y_n \xrightarrow{qm} Y$, then $X_n + Y_n \xrightarrow{qm} X+Y$
+\end{enumerate}
+
+\paragraph{Weak Law of Large Numbers:} Define the $k^{th}$ sample moment, $\hat{\mu}_{k} \equiv n^{-1}\SUM{i}{1}{n} X_{i}^{k}$, $X_i \iid F$. The WLLN says that $\hat{\mu}_{k} \xrightarrow{P} \mu_{k}$. Hence, $\hat{\sigma}^2 = \hat{\mu}_{2} - \hat{\mu}_{1}^{2} \xrightarrow{P} \mu_{2} - \mu^2 = \sigma^2$.
+
+\paragraph{Slutsky's Theorem:} given $X_n \xrightarrow{\L} X$, $Y_n \xrightarrow{\L} c$, 
+\begin{enumerate}
+\item $X_n + Y_n \xrightarrow{\L} X+c$,
+\item $X_n Y_n \xrightarrow{\L} cX$
+\end{enumerate}
+The general strategy is: massage RV into $num/denom$ such that we can use CLT to establish $num \to N(\mu,\sigma^2)$ and $denom \to c$. Then, Slutsky's says that RV $\to$ Normal. 
+
+\paragraph{Conditioning:}
+\begin{enumerate}
+\item Density of $Y$ given $X=x$ is denoted $f_{Y\given{X}}(y\given{x}) = f_{X,Y}(x,y)/f_{X}(x)$. 
+\item The conditional expectation of $Y$ given $X=x$ is denoted $E(Y\given{X=x}) = \int y f_{Y\given{X}}(y\given{x}) \, dy$
+\end{enumerate}
+
+\paragraph{Properties of $E(Y\mid X)$:}
+\begin{enumerate}
+\item $E(aY + bZ + c\given{X}) = a E(Y\given{X}) + b E(Z\given{X}) + c $
+\item $E(g(X) \given{X}) = g(X)$
+\item $E\left[ E(Y\given{X}) \right] = E(Y)$
+\item $\var(Y) = E(\var(Y\given{X})) + \var\left( E(Y\given{X}) \right)$
+\end{enumerate}
+
+\paragraph{Bayesian Inference:} the posterior density is proportional to the prior times the likelihood. If $\theta \in \Theta$ is a parameter of a distribution $F$ where $X_1, X_2, \ldots, X_n \sim F$, then
+\[
+P( \theta \in dp \given{x_1, \ldots, x_n}) \propto \L(x_1, \ldots, x_n \given{\theta \in dp}) P(\theta \in dp)
+\]
+In a particular setting, we say that $\Theta$ is a family of \textbf{conjugate priors} if a prior from $\Theta$ yields a posterior from $\Theta$. 
+
+\paragraph{Bivariate Normal:} Given $U,V \iid N(0,1)$, and $\theta \in [0,\pi]$, $(X,Y) = (U,\rho U + \sqrt{1-\rho^2}V)$ defines the standard bivariate normal with $\mu = (0,0)$, and $\Sigma = \begin{pmatrix} 1 & \rho \\ \rho & 1 \end{pmatrix}$. $f_{X,Y} = f_{X} f_{Y|X} = \frac{1}{2\pi\sqrt{1-\rho^2}} \exp\set{-\frac{1}{2(1-\rho^2)}(x^2 - 2 \rho xy + y^2)}$
+\begin{enumerate}
+\item $Y \given{X = x} \sim N(\rho x, \sqrt{1-\rho^2})$. (So, $Y$ is a traveling bell curve.)
+\item $E(Y) = E(\rho U + \sqrt{1-\rho^2}V) = 0$, and $\var(Y) = \rho^2\var(U) + (1-\rho^2)\var(V) = 1$. 
+\item If we had started $(X,Y) \sim N\left(\mu_{X}, \mu_{Y}, \sigma_{X}^{2},  \sigma_{Y}^2,  \rho\right)$, then $(X^{*},Y^{*}) = ((X-\mu_X)/\sigma_{X}, (Y-\mu_{Y})/\sigma_{Y})$ is standard bivariate normal, and $Y^{*} = \rho X^{*} + \sqrt{1-\rho^2} Z^{*}$, where $Z^{*} \orth X^{*}$ and $Z^{*} \sim N(0,1)$. 
+\end{enumerate}
+\renewcommand{\P}{\ensuremath{\mathbb{P}}}
+\paragraph{Markov Chains:} 
+\begin{enumerate}
+\item $X_0, X_1, \ldots = \set{X_n}$ is a \textit{Markov Chain} if $\range(X_i)$ is countable and
+\begin{align*}
+&P(X_{n+1} = j \given{X_n = i, X_{n-1}=i_{n-1},\ldots, X_{0}=i_{0}}) \\
+&= P(X_{n+1}=j \given{X_{n}=i}) \\
+&= p_{ij,n} \quad \text{(prob. of transition from $i$ to $j$ at time $n$)}
+\end{align*}
+\item Define $\P$, the one-step transition matrix such that $\P(i,j) = p_{ij}$ and thus $\P^{(n)} = \P^{n}$ is the $n$-step transition matrix. 
+\item if $\lambda$ = distribution of $X_0$, then distribution of $X_1 = \lambda \P$ and generally $X_n \sim \lambda\P^{n}$.
+\item $i$ is recurrent if there exists $n$ such that all paths which start at $i$ and take $n$ steps must terminate at $i$. $i$ is transient if for all $n$, there exist paths from $i$ which do not terminate at $i$, and this is also characterized via:
+\[
+\SUM{i}{1}{\infty} p_{ii}^{(n)} = +\infty I(i = \text{recurrent}) + c I(i = \text{trans.})
+\]
+Intuition: transient means fleeting. As your chain increases in length, you should see transient states less and less. Recurrent states should show up in some ``frequent'' fashion. Recurrent states have a finite return time with probability 1.
+\item a state $i$ has period $k$ if any return to state $i$ must occur in multiples of $k$ steps:
+\[
+k = \gcd\set{n : p_{ji,n} > 0}
+\]
+\item $i \to j \equiv$ ``$i$ leads to $j$'' if there is a path with positive probability, starting at $i$ and ending at $j$
+\item ``$i$ communicates with $j$'' if $i \to j$ and $j \to i$
+\item $\set{X_n}$ is irreducible if all states communicate with each other. 
+\item if $\set{X_n}$ has a finite state-space, and is irreducible and aperiodic:
+\begin{enumerate}
+\item For each state $j$, there exists $\pi_j > 0$ (independent of $i$) such that $\lim_{n\to\infty} p_{ij}^{(n)} = \pi_{j}$ and $\SUM{j}{1}{n} \pi_j = 1$
+\item $\pi = \pi \P$ (``balance equations'')
+\item $\pi_j$ represents the long-run proportion of time spent at state $j$
+\item $\pi_{j}^{-1}$ is the expected number of steps required to get to $j$ from $j$. 
+\end{enumerate}
+\item $\pi$ is called a stationary distribution of $\set{X_n}$ and if $\lambda = \pi$, then $X_n \sim \pi$ for all $n$. 
+\end{enumerate}
+
+\paragraph{Linear Regression:} given $(X,Y)$ with some joint distribution and $\sigma_X$, $\sigma_{Y} < \infty$, ``best'' linear predictor of $Y$ based on $X$, denoted $\hat{Y} = a^{*} + b^{*}X$, is RV that minimizes MSE: $(a^{*},b^{*}) = \argmin_{(a,b)} E\left[(Y-\hat{Y})^2\right]$. In this case $b^{*} = \cov(X,Y)/\sigma_{X}^2$, and $a^{*} = \mu_{Y} - b^{*}\mu_{X}$. 
+\begin{enumerate}
+\item In general, the function of $X$ which minimizes MSE is $E(Y\given{X})$, and in the case of normality, $\hat{Y} = E(Y\given{X})$, but not generally. 
+\item $\var(\hat{Y}) = \rho^2 \sigma_{Y}^2$
+\end{enumerate}
+\paragraph{Linear Algebra:}
+\begin{enumerate}
+\item $\SUM{i}{1}{n} c_i V_i = \vec{c}^{T} \vec{V}$
+\item $E(\vec{V}) = (E(V_1), E(V_2), \ldots, E(V_n))^{T}$
+\item given a random variable $Z$, $\cov(Z, \vec{V}) = (\cov(Z,V_1), \cov(Z,V_2), \ldots, \cov(Z,V_n))^{T}$
+\item $\Sigma_{UV}(i,j) = \cov(U_i,V_j)$
+\item $E(\vec{c}^{T} \vec{V}) = \vec{c}^{T} E(\vec{V})$ 
+\item $\cov(Z, \vec{c}^{T} \vec{V}) = \vec{c}^{T} \cov(Z,\vec{V})$
+\item $\var(\vec{c}^{T}\vec{V}) = \vec{c}^{T}\Sigma_{VV} \vec{c}$
+\end{enumerate}
+
+\paragraph{Multiple Regression:} If $(X_1,X_2,\ldots, X_n, Y) = (\vec{X},Y)$ have a joint density and $\Sigma_{XX}$ is invertible, then $\hat{Y} = \mu_{Y} + \vec{c}^{T}(\vec{X}-E(\vec{X}))$ is best linear predictor provided $\cov(\hat{Y},\vec{X}) = \vec{0}$, which is when $\vec{c} = \Sigma_{XX}^{-1}\cov(Y,\vec{X})$. 
+\end{multicols}
+\end{document}

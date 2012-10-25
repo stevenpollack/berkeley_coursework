@@ -1,0 +1,31 @@
+\documentclass[12pt]{article}
+
+\usepackage{mcgill,palatino}
+
+\begin{document}
+First, note that any $n \in \N$, we have $n = m(m+1)/2 + j$ for some $m \in \N$ and $0 \leq j \leq m$. Thus, for any $n \in \N$, define the interval $A_n = \left[\frac{j}{m+1}, \frac{j+1}{m+1}\right]$ and the sequence of random variables, $\set{X_n}$ on $[0,1]$ by 
+\[
+X_n(x) = 
+\begin{cases}
+m+1 &\text{ if $x \in A_n$} \\
+0 &\text{ otherwise}
+\end{cases}
+\]
+Hence, $X_1(x) = 2 \cdot I_{[0,1/2]}(x)$, $X_2(x) = 2 \cdot I_{[1/2,1]}(x)$, $X_{6}(x) = 4\cdot I_{[0,1/4]}(x)$\ldots
+
+Now, we first establish that  $X_n$ cannot converge in quadratic mean to 0:
+\begin{align*}
+E(X_n^2) &= \sum_{x \in \range(X_n)} x^2 P(X_n=x) \\
+&= (m_n+1)^2 P(X_n = m_n+1) \\
+&= (m_n+1)^2 \cdot \frac{1}{m_n+1} \\
+&= m_n+1
+\end{align*}
+And clearly $m_n \to \infty$ as $n \to \infty$.
+
+Next, we establish that $X_n \xrightarrow{P} 0$. Let $\epsilon > 0$\footnote{and for the sake of an interesting result, suppose $\epsilon \ll 1$}, and find $m \in \N$ such that $\epsilon > 1/(m+1)$. Then, we have that 
+\[
+P(X_{m(m+1)/2} \geq \epsilon ) = P(X_{m(m+1)/2} = m+1) = \frac{1}{m+1} \xrightarrow{m\to\infty} 0
+\]
+
+Hence, our "moving mountain" demonstrates a function which converges in probability to 0, but does not converge in quadratic mean to 0. Moreover, it's clear that $X_n$ fails to converge point-wise to the zero function: for any $x \in [0,1]$ the sequence $X_n(x)$ diverges. So, we've actually found a measurable function on the space $[0,1]$ which has converges in measure to the zero function, but fails to converge in any other fashion (point-wise, quadratic mean, or uniform). 
+\end{document}

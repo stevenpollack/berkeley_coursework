@@ -1,0 +1,48 @@
+\documentclass[12pt]{article}
+\usepackage{mcgill,palatino,multicol}
+
+\newenvironment{Exercise}[1]%
+{ \noindent\textbf{\#{#1}.}\quad } %
+{ = ? \vspace{.06\textheight} }
+
+<<getProblem, echo=FALSE, comment=NA>>=
+set.seed(102)
+
+getProblem <- function() {
+  number_of_terms <- 2+rbinom(n=1,size=1,prob=0.5) # either 2 or 3
+  numerators <- sample(size=number_of_terms,x=1:12,replace=TRUE)
+  denominators <- sample(size=number_of_terms,x=2:12,replace=TRUE)
+  
+  latex_output <- paste("\\dfrac{", numerators, 
+                        "}{", denominators, "}",
+                        sep="", collapse=" + ")
+  problem <- paste("\\ensuremath{", latex_output, "}", sep="")
+  return(problem)
+}
+@
+
+<<test, echo=FALSE, comment=NA>>=
+makeProblemNumber <- function(prb_num=1) {
+  beginEnv <- "\\begin{Exercise}"
+  problem_number <- paste("{",prb_num,"}",sep="")
+  endEnv <- "\\end{Exercise}"
+  problem <- getProblem()
+  out <- paste(beginEnv, problem_number, problem, endEnv, sep="")
+  return(out)
+}
+@
+
+<<generateTest, echo=FALSE>>=
+test <- lapply(X=1:20,FUN=makeProblemNumber)
+test <- paste(test, collapse="\\\\")
+@
+
+\begin{document}
+
+Write all your answers down in their most simple forms.
+
+\begin{multicols}{2}
+\Sexpr{test}
+\end{multicols}
+
+\end{document}

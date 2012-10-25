@@ -1,0 +1,268 @@
+\documentclass[12pt,titlepage]{article}
+
+\usepackage{mcgill,palatino,fancyhdr}
+
+\DeclareMathOperator{\Cov}{Cov}
+
+\lhead{STAT201A -- Sec. 102}
+\chead{HW \#3. }
+\rhead{Steven Pollack -- 24112977}
+\cfoot{\thepage}
+
+\title{STAT201A -- Sec. 102 \\ Homework \#3. }
+\author{Steven Pollack \\ 24112977}
+\date{}
+
+
+\newcommand{\given}[1]{ \left| \, {#1} \right.}
+
+\begin{document}
+\maketitle
+
+\pagestyle{empty}
+\newpage
+\pagestyle{fancy}
+
+\paragraph{\#1.} For $1 \leq i \leq n$, let $U_i$ be i.i.d. uniform on the unit interval. Let $M = \min\set{U_1, U_2, \ldots, U_n}$. Find the distribution, expectation and SD of $M$. On the same horizontal axis, sketch (roughly, by hand) the density of $M$ for $n=10$ and $n=100$. Give a brief intuitive explanation for how the two densities differ. 
+
+[\Hint to find the distribution, recall what we said in lecture about finding probabilities associated with extrema. To connect with the text, notice that this problem is 2.14.7 with many bells and whistles attached. The hint for that problem should seem very familiar.]
+\begin{proof}
+For $U_i \iid \text{Uniform}([0,1])$, $1 \leq i \leq n$, if $M = \min\set{U_1, U_2, \ldots, U_n}$, then 
+\[
+P(M > x) = P(\text{$U_i > x$ for all $1 \leq i \leq n$}) = \prod_{i=1}^{n} P(U_1 > x) = (1-x)^{n}
+\]
+ wherever $0 \leq x \leq 1$. If $x < 0$, $P(M \leq x) = 0$, and if $x >1$, $P(M \leq x) = 1$. Hence,
+\[
+P(M \leq x) = 
+\begin{cases}
+0 &\text{ if $x \leq 0$} \\
+1-(1-x)^{n} &\text{ if $0 < x \leq 1$ } \\
+1 &\text{ if $1 < x$}
+\end{cases}
+\]
+Now, disregarding continuity issues at $x=0,1$, $dP/dx = f(x) = n(1-x)^{n-1} I_{[0,1]}$ and thus 
+\[
+E(M) = \int_{0}^{1} t f(t) \, dt = n \int_{0}^{1} t(1-t)^{n-1} \, dt
+\]
+One round of integration by parts yields
+\[
+E(M) = \frac{n}{1}\frac{n-1}{2} \int_{0}^{1} t^{2} (1-t)^{n-2} \, dt
+\]
+Another yields
+\[
+E(M) = \frac{n}{1} \frac{n-1}{2} \frac{n-2}{3} \int_{0}^{1} t^3 (1-t)^{n-3} \, dt
+\]
+and a simple induction shows that the $k^{th}$ round will provide
+\[
+E(M) = \frac{\prod_{i=0}^{k-1} (n-i)}{\prod_{i=1}^{k}i} \int_{0}^{1} t^{k} (1-t)^{n-k} \, dt \qquad (1 \leq k \leq n)
+\]
+Hence, setting $k=n$, we have 
+\[
+E(M) = \frac{n(n-1)(n-2)\cdots 1}{1 \cdot 2 \cdot 3 \cdots n} \int_{0}^{1} t^{n} \, dt = \frac{1}{n+1}
+\]
+For $SD(M)$, we use integration by parts again, playing the exact same game. However, to spare you the gory details, we have the following algebraic result:
+\[
+E(M^2) = \dfrac{\prod_{i=0}^{k}(n-i)}{\prod_{i=3}^{k+2} i}\int_{0}^{1} t^{2+k} (1-t)^{n-k-1} \, dt \qquad (0 \leq k \leq n-1)
+\]
+Hence, setting $k=n-1$ we have
+\[
+E(M^2) = \frac{\prod_{i=0}^{n-1} (n-i)}{\prod_{i=3}^{n+1} i} \int_{0}^{1} t^{n+1} \, dt = 2 \times \frac{n!}{(n+1)!} \times \frac{1}{n+2} = \frac{2}{(n+1)(n+2)}
+\]
+Combining this result, and the preceding expectation:
+\[
+SD(M) = \sqrt{\var(M)} = \sqrt{\frac{2}{(n+1)(n+2)} - \frac{1}{(n+1)^2}} = \sqrt{ \frac{n}{(n+1)^2(n+2)}} = \frac{1}{n+1}\sqrt{\frac{n}{n+2}}
+\]
+\end{proof}
+
+
+
+\paragraph{\#2.} Let $X$ have the Poisson $(\mu)$ distribution. Find $SD(X)$ by finishing the calculation that we started in class.
+
+\begin{proof} Given $X \sim \text{Poisson}(\mu)$, 
+\begin{align*}
+E(X^2) &= \SUM{x}{0}{\infty} x^{2} e^{-\mu} \frac{\mu^{x}}{x!} = e^{-\mu} \SUM{x}{0}{\infty} \left(x(x-1) + x\right) \frac{\mu^x}{x!} \\
+&= e^{-\mu}\left( \SUM{x}{2}{\infty} \frac{\mu^{x}}{(x-2)!} + \SUM{x}{1}{\infty} \frac{\mu^x}{(x-1)!} \right) \\
+&= e^{-\mu}\left( \mu^2 \SUM{x}{0}{\infty} \frac{\mu^{x}}{x!} + \mu \SUM{x}{0}{\infty} \frac{\mu^x}{x!} \right) \\
+&=\mu^2 + \mu
+\end{align*}
+Hence, 
+\[
+\var(X) = E(X^2) - E(X)^2 = \mu^2 + \mu - \mu^2 = \mu
+\]
+\end{proof}
+
+\paragraph{\#3.} There are many close links between the binomial and the Poisson. You've seen one in class. Here's another.
+
+A coin lands heads with probability $p$. It is tossed $N$ times where $N$ is Poisson with parameter $\lambda$. Let $X$ be the number of heads. Find the distribution of $X$. Identify this as a well known distribution and find its parameter or parameters. 
+
+[\Hint find the possible values, carefully. For each possible value $x$, partition the event $\set{X=x}$ according to the value of $N$; and then use the two great rules: multiplication and addition.]
+
+\begin{proof}Because of the variable nature of $N$ it's clear that the range of $X$ is all of $\N$. To determine the distribution, however, we start with the law of total probability:
+\[
+P(X=x) = \SUM{n}{0}{\infty}P(X=x\given{N=n})P(N=n)
+\]
+However, it's pretty clear that $P(X=x\given{N=n}) = 0$ whenever $n < x$ and, by definition,
+\[
+P(X=x\given{N=n}) = \binom{n}{x}p^x q^{n-x} \qquad (x \leq n)
+\]
+So, 
+\begin{align*}
+P(X=x) &= \SUM{n}{x}{\infty}P(X=x\given{N=n})P(N=n) \\
+&= \SUM{n}{x}{\infty}\binom{n}{x}p^{x}q^{n-x} e^{-\lambda}\frac{\lambda^{n}}{n!} \\
+&= p^x q^{-x}e^{-\lambda} \SUM{n}{x}{\infty} \frac{n!}{(n-x)! x!} \frac{(q\lambda)^n}{n!} \\
+&= \frac{p^x}{q^x x! e^{\lambda}} \SUM{n}{0}{\infty} \frac{(q\lambda)^{n+x}}{n!} \\
+&= \frac{ (pq\lambda)^x}{q^x x! e^{\lambda}} \times e^{q\lambda} \\
+&= e^{-(1-q)\lambda} \frac{(p\lambda)^x}{x!}  = e^{-p\lambda} \frac{(p\lambda)^x}{x!}
+\end{align*}
+Which demonstrates that $X \sim \text{Poisson}(p\lambda)$. 
+\end{proof}
+
+\paragraph{\#4.} A coin lands heads with probability $p$. If it is tossed $n$ times, where $n$ is a fixed number, then clearly the number of heads and the number of tails are dependent random variables. But as you've seen before, randomizing a parameter can really affect dependence and independence. With that as preamble, do 2.14.11(b).
+
+[\Hint write the event $\set{X=x,Y=y}$ in terms of $X$ and $N$. The result of Problem 2 will be very useful]
+
+[2.14.11(b) reads: suppose we toss a coin once and let $p$ be the probability of heads. Let $X$ denote the number of heads and let $Y$ denote the number of tails. $(b)$ Let $N \sim \text{Poisson}(\lambda)$ and suppose we toss a coin $N$ times. Let $X$ and $Y$ be the number of heads and tails. Show that $X$ and $Y$ are independent.]
+
+\begin{proof}
+As in exercise \#3., we write
+\[
+P(X=x,Y=y) = \SUM{n}{0}{\infty}P(X=x,Y=y\given{N=n})P(N=n)
+\]
+however, now we note that for $y \neq n-x$, $P(X=x,Y=y \given{N=n}) = 0$. Hence, 
+\[
+P(X=x,Y=y) = P(X=x,Y=n-x\given{N=n})P(N=n) = \binom{n}{x}p^{x}q^{n-x} e^{-\lambda}\frac{\lambda^n}{n!}
+\]
+So, using the fact that $1 = p+q$, and $x+y=n$ we may write
+\begin{align*}
+P(X=x,Y=y) &= \binom{x+y}{x} p^x q^{y} e^{-\lambda(p+q)} \frac{\lambda^{x+y}}{(x+y)!} \\
+&= \frac{(p\lambda)^x e^{-\lambda p}}{x!} \cdot \frac{(q\lambda)^{y}e^{-\lambda q}}{y!} \\
+&= P(X=x) \cdot P(Y=y) 
+\end{align*}
+Where we used the result of exercise \#3. in the last equation.
+\end{proof}
+
+
+\paragraph{\#5.} (Exercise 3.8.7) This is the ``tail integral'' formula for expectation, analogous to tail sums in the discrete case. The hint is useful because the basic formula for expectation is the integral of a product. Use the fact that $f$ is the derivative of $F$, and the derivative of $x$ is a really easy function\ldots
+
+[3.8.7 reads:  Let $X$ be a continuous random variable with cdf $F$. Suppose that $P(X > 0) = 1$ and that $E(X)$ exists. Show that $E(X) = \int_{0}^{\infty}  P(X > x) \, dx$. \Hint Consider integrating by parts. The following fact is helpful: if $E(X)$ exists then $\lim_{x\to\infty} x [1 - F (x)] = 0$.] 
+
+\begin{proof}
+Using the hint, let $u(x) = 1-F(x)$ and $v(x) = x$, then via integration by parts
+\begin{align*}
+\int_{0}^{\infty} 1 - F(x) \, dx &= x(1-F(x))\bigr|_{x=0}^{\infty} - \int_{0}^{\infty}x(-f(x)) \, dx \\
+&= (0 - 0) + \int_{0}^{\infty} x f(x) \, dx \\
+&= E(X)
+\end{align*}
+Where in the second line, we used the fact that the existence of $E(X)$ implies\footnote{This result can be established via l'H\^{o}spital's rule and an argument that $xf(x)$ must vanish at infinity for $E(X) < \infty$.} \[\lim_{x\to\infty} x(1-F(x)) = 0\]
+\end{proof}
+
+\paragraph{\#6.} For $1 \leq i \leq n$, let $T_i$ be exponential with rate $\lambda_{i}$ and assume the $T_i$'s are independent. 
+\begin{enumerate}
+\item[a)] Use the result of the previous problem to find $E(T_1)$. 
+\item[b)] Let $M = \min\set{T_i : 1 \leq i \leq n}$. Find the distribution (do you recognize it?) and expectation of $M$. 
+\end{enumerate}
+\begin{proof}
+\begin{enumerate}
+\item[a)] Using the result in exercise \#5., and the fact that, for $T \sim \text{Exp}(\lambda)$, $P(T > t) = e^{-t/\lambda }$, we have 
+\[
+E(T_1) = \int_{0}^{\infty} P(T_1 > t) \, dt = \int_{0}^{\infty} e^{-t/\lambda_{1}} \, dt = \lambda_{1} e^{-t/\lambda_1}\bigr|_{t=\infty}^{0} = \lambda_{1}
+\]
+\item[b)]If $M = \min\set{T_i : 1 \leq i \leq n}$ and the $T_{i}$'s are independent, then 
+\[
+P(M > t) = P(T_1 > t, T_2 > t, \ldots, T_n > t) = \prod_{i=1}^{n} P(T_i > t) = \exp\set{-t\SUM{i}{1}{n}\lambda_{i}^{-1}}
+\]
+So $M \sim \text{Exp}$ with rate $\SUM{i}{1}{n} \lambda_{i}^{-1}$ and therefore has expectation $\SUM{i}{1}{n} \lambda_{i}^{-1}$. 
+\end{enumerate}
+\end{proof}
+
+\paragraph{\#7.} Here you will derive two ways of computing covariance. 
+\begin{enumerate}
+\item[a)] Prove the first statement in Theorem 3.19 that says that covariance is the ``mean of the products minus the product of the means''. This formula should be treated like the basic formula for expectation and like the ``variance is the mean of the square minus the square of the mean''. Use it only when the distributions of $X,Y$ and $XY$ are very simple. Occasionally, it is useful in prove some general fact about covariance. But, the key to covariance is part b). 
+\item[b)] (Exercise 3.8.14) but just do the easy case $m=n=2$. The general case is proved by routine algebra that you don't have to do. The result is the most useful computational tool for covariance, and is called ``bilinearity of covariance''. 
+
+[Exercise 3.8.14 reads: let $X_1, X_2, \ldots, X_n$ and $Y_1, Y_2, \ldots, Y_n$ be random variables and $a_1, a_2, \ldots, a_m$ and $b_1, b_2, \ldots, b_n$ be constants. Show that
+\[
+\Cov\left(\SUM{i}{1}{n}a_i X_i, \SUM{j}{1}{m} b_j Y_j \right) = \SUM{i}{1}{n}\SUM{j}{1}{m}a_i b_j \Cov(X_i, Y_j)
+\]
+
+\end{enumerate}
+
+\begin{proof}
+\begin{enumerate}
+\item[a)] From the definition of $\Cov(X,Y)$ in 3.18,
+\begin{align*}
+\Cov(X,Y) &= E\left[ (X-\mu_{X})(Y-\mu_{Y}) \right] \\
+&= E( XY - \mu_{Y}X - \mu_{X}Y + \mu_{X} \mu_{Y} ) \\
+&= E(XY) - E(\mu_{Y} X) - E(\mu_{X} Y) + E(\mu_{X} \mu_{Y}) \\
+&= E(XY) -\mu_{Y} E(X) - \mu_{X} E(Y) + \mu_{X}\mu_{Y} \\
+&= E(XY) - \mu_{X} \mu_{Y}
+\end{align*}
+\item[b)] To prove the $n=m=2$ case, consider the expansions
+\[
+(a_1 X_1 + a_2 X_2)(b_1 Y_1 + b_2 Y_2) = a_1 b_1 X_1 Y_1 + a_1 b_2 X_1 Y_2 + a_2 b_1 X_2 Y_1 + a_2 b_2 X_2 Y_2
+\]
+and
+\[
+(a_1 \mu_{X_1} + a_2 \mu_{X_2})(b_1 \mu_{Y_1} + b_2 \mu_{Y_2}) = a_1 b_1 \mu_{X_1} \mu_{Y_1} + a_1 b_2 \mu_{X_1} \mu_{Y_2} + a_2 b_1 \mu_{X_2} \mu_{Y_1} + a_2 b_2 \mu_{X_2} \mu_{Y_2}
+\]
+Now, take the expectation of the former identity and subtract the second equation from it grouping terms by coefficients:
+\begin{multline*}
+E\left[(a_1 X_1 + a_2 X_2)(b_1 Y_1 + b_2 Y_2)\right] - (a_1 \mu_{X_1} + a_2 \mu_{X_2})(b_1 \mu_{Y_1} + b_2 \mu_{Y_2}) \\
+= a_1 b_1\left( E(X_1 Y_1) - \mu_{X_1} \mu_{Y_1} \right) 
++ a_1 b_2 \left( E(X_1 Y_2) - \mu_{X_1} \mu_{Y_2} \right) \\
++ a_2 b_1\left( E(X_2 Y_1) - \mu_{X_2} \mu_{Y_1} \right) + a_2 b_2 \left( E(X_2 Y_2) - \mu_{X_2} \mu_{Y_2} \right)
+\end{multline*}
+Rewriting the above, using part a), we see that
+\[
+\Cov\left( a_1 X_1 + a_2 X_2,b_1 Y_1 + b_2 Y_2 \right) = \SUM{i}{1}{2} \SUM{j}{1}{2} a_i b_j \Cov(X_i, Y_j)
+\]
+\end{enumerate}
+\end{proof}
+
+
+
+\paragraph{\#8.} Covariance has awful units. For example, if $X$ is weight in pounds and $Y$ is height in inches, the units of covariance are ``inch pounds''. Nobody understands that. So, it's a great idea to get rid of the units if possible. Read definitions 3.18. The first is covariance. The second is correlation, which divides covariance by the two SD's to get rid of those awful units and create a pure number. 
+
+The goal of this problem is to prove the second statement in Theorem 3.19, that correlation is between -1 and 1. There are many ways of doing this but I'd like you to use the following steps.
+
+\begin{enumerate}
+\item[a)] Let $X^{*} = (X-\mu_{X})/\sigma_{X}$ be ``X in standard units''. Show that $E(X^{*}) = 0$, $SD(X) = 1$ and $E({X^{*}}^{2})=1$. 
+\item[b)] Show that $\rho(X,Y) = E(X^{*}Y^{*})$. There's no real calculation here, just rewrite the definition of correlation in the right way.
+\item[c)] Both $(X^{*}+Y^{*})^2$ and $(X^{*} - Y^{*})^{2}$ are non-negative random variables, and hence so are their expectations. Compute the two expectations and apply the results of the previous two parts to show that $-1\leq \rho(X,Y) \leq 1$. 
+\end{enumerate}
+
+\begin{proof}
+\begin{enumerate}
+\item[a)] Let $E(X) = \mu$ and $\sigma_{X}^{2} = \var(X)$. Then,
+\begin{align*}
+E(X^{*}) = E\left(\frac{X-\mu}{\sigma_{X}}\right) = \sigma_{X}^{-1}E(X-\mu) = \sigma_{X}^{-1} \times 0 = 0
+\end{align*}
+\begin{align*}
+SD(X^{*})^2 = \var(X^{*}) = \var\left(\frac{X-\mu}{\sigma_{X}}\right) = \sigma_{X}^{-2}\var\left(X-\mu\right) = \sigma_{X}^{-2} \times \sigma_{X}^{2} = 1
+\end{align*}
+Hence, $SD(X^{*}) = 1$ (since $SD(X) \geq 0$). Finally, 
+\begin{align*}
+E({X^{*}}^{2}) = E\left( \frac{(X-\mu)^2}{\sigma_{X}^{2}} \right) = \sigma_{X}^{-2} E\left[ \left(X-\mu\right)^{2} \right] = \sigma_{X}^{-2} \times \sigma_{X}^{2} = 1
+\end{align*}
+\item[b)] Using the definition of $\rho$ given in 3.12,
+\begin{align*}
+\rho(X,Y) = \frac{\Cov(X,Y)}{\sigma_{X}\sigma_{Y}} = \frac{E\left[(X-\mu_{X})(Y-\mu_{Y})\right]}{\sigma_{X} \sigma_{Y}} = E\left[ \frac{X-\mu_{X}}{\sigma_{X}} \cdot \frac{Y-\mu_{Y}}{\sigma_{Y}} \right] = E(X^{*} Y^{*})
+\end{align*}
+\item[c)] Consider $(X^{*}+Y^{*})^2$. Since this random variable is non-negative, its expectation is non-negative and we have
+\begin{align*}
+0 \leq E\left[(X^{*}+Y^{*})^2 \right] = E({X^{*}}^{2} + 2X^{*}Y^{*} + Y^{*}) = 2 + 2\rho(X,Y) 
+\end{align*}
+Hence, $-1 \leq \rho(X,Y)$. Similarly, 
+\[
+0 \leq E\left[(X^{*}-Y^{*})^2 \right] = E({X^{*}}^{2} - 2X^{*}Y^{*} + Y^{*}) = 2 - 2\rho(X,Y) 
+\]
+which implies that $\rho(X,Y) \leq 1$. Putting the two inequalities together, we have
+\[
+-1 \leq \rho(X,Y) \leq 1
+\]
+\end{enumerate}
+\end{proof}
+
+
+
+\end{document}

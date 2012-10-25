@@ -1,0 +1,131 @@
+\documentclass[12pt,titlepage]{article}
+
+\usepackage{mcgill,palatino,fancyhdr}
+
+\lhead{STAT201A -- Sec. 102}
+\chead{HW \#2. }
+\rhead{Steven Pollack -- 24112977}
+\cfoot{\thepage}
+
+\title{STAT201A -- Sec. 102 \\ Homework \#2. }
+\author{Steven Pollack \\ 24112977}
+\date{}
+
+\newcommand{\given}[1]{ \left| \, {#1} \right.}
+\begin{document}
+\maketitle
+
+\pagestyle{empty}
+\newpage
+\pagestyle{fancy}
+
+\paragraph{\#1.10.20.} A box contains 5 coins and each has a different probability of showing heads. Let $p_1, \ldots, p_5$ denote the probability of heads on each coin. Suppose that
+\[
+p_1 = 0, p_2 = 1/4, p_3 = 1/2, p_4 = 3/4, \text{ and } p_{5} = 1
+\]
+Let $H$ denote ``heads is obtained'' and let $C_i$ denote the event that coin $i$ is selected. 
+\begin{enumerate}
+\item[a)] Select a coin at random and toss it. Suppose a head is obtained. What is the posterior probability that the coin $i$ was selected $(i=1,\ldots, 5)$? In other words, find $P(C_i \given{H})$ for $i=1,\ldots, 5$. 
+\item[b)] Toss the coin again. What is the probability of another head? In other words, find $P(H_2 \given{H_1})$ where $H_{j} =$ ``heads on toss $j$''. 
+\end{enumerate}
+Now, suppose that the experiment was carried out as follows: We select a coin at random and toss it until a head is obtained.
+\begin{enumerate}
+\item[c)] Find $P(C_i \given{B_4})$ where $B_{4} =$ ``first head is obtained on toss 4''.
+\end{enumerate}
+
+\begin{proof}
+\begin{enumerate}
+\item[a)] Assuming that the chance to draw any particular coin is simply $1/5$, we can use Bayes' rule (and the law of total probability) to find:
+\begin{align*}
+P(C_i \given{H} ) &= \frac{ P(H \given{C_i}) P(C_i) }{P(H)} \\
+&= \dfrac{ P(H \given{C_i}) P(C_i) }{\dSUM{j}{1}{5} P(H \given{C_j}) P(C_j)} \\
+&= \frac{ p_{i} (1/5) }{\dSUM{j}{1}{5} p_j (1/5)} \\
+&= \frac{ p_i }{2.5} 
+\intertext{Hence,}
+P(C_i \given{H}) &= 
+\begin{cases}
+0 &\text{ if } i=1 \\
+0.1 &\text{ if } i=2 \\
+0.2 &\text{ if } i =3 \\
+0.3 &\text{ if } i=4 \\
+0.4 &\text{ if } i=5
+\end{cases}
+\end{align*}
+\item[b)] 
+Notice that for any fixed coin, individual coin tosses are independent events. Hence, $P(H_1 H_2\given{C_i}) = p_i \times p_i$. Using this fact, and Bayes' rule (again):
+\[
+P(H_{2} \given{H_1}) = \frac{ P(H_1 H_2) }{P(H_1)} = \frac{\dSUM{i}{1}{5}P(H_1H_2 \given{C_i})P(C_i)}{\dSUM{j}{1}{5}p_j P(C_j)} = \frac{\dSUM{i}{1}{5}p_{i}^{2}}{\dSUM{i}{1}{5} p_i} = 0.75
+\]
+\item[c)] 
+\begin{align*}
+P(C_i \given{B_{4}} ) &= \frac{ P(B_{4} \given{C_i}) P(C_i) }{P(B_{4})} \\
+&= \dfrac{ P(B_{4} \given{C_i}) P(C_i) }{\dSUM{j}{1}{5} P(B_{4} \given{C_j}) P(C_j)} \\
+&= \frac{ q_{i}^{3} p_i }{\dSUM{j}{1}{5} q_{j}^{3} p_j } \\
+\intertext{Hence,}
+P(C_i \given{B_{4}}) &\approx 
+\begin{cases}
+0 &\text{ if } i=1 \\
+0.58696 &\text{ if } i=2 \\
+0.347826 &\text{ if } i =3 \\
+0.0652174 &\text{ if } i=4 \\
+0 &\text{ if } i=5
+\end{cases}
+\end{align*}
+\end{enumerate}
+\end{proof}
+\paragraph{\#2.}
+Let $X$ be the number of heads in $n$ tosses of a coin that lands heads with probability $p$. Let $m < n$ be a positive, and let $Y$ be the number of heads in the first $m$ tosses. 
+
+Fix an integer $k$ so that $0 \leq k \leq n$. Given that $X=k$, list (carefully!) the possible values of $Y$. 
+
+Now, find the conditional distribution of $Y$ given $X=k$. That is, for each possible value $y$ on your list, find $P(Y=y\given{X=k})$. Does your answer depend on $p$?
+\begin{proof} 
+To determine the range of $Y$ we first consider the case where $0 \leq m < k \leq n$. It's tempting to say that $0 \leq Y \leq m$ here, however the most amount of tails we can observe inside the first $m$ tosses is $\max\set{0,n-k-m}$. In the case where $0 \leq k \leq m < n$, we see that $Y$ cannot exceed $k$ and so $0 \leq Y \leq k$. Putting these situation together, we have that $\max\set{0,n-k-m} \leq Y \leq \min\set{m,k}$. 
+
+Now, we have already been provided with the information that  $X \sim Binomial(n,p)$ and therefore $P(X=k)=\binom{n}{k}p^{k}q^{n-k}$. Hence, to calculate $P(Y=y, X=k)$, we use the fact that $Y \sim Binomial(m,p)$, and that there are $\binom{m}{y}\times\binom{n-m}{k-y}$ ways for $n$ coin tosses to yield $y$ heads in the first $m$ tosses and $k-y$ heads in the remaining tosses. That is,
+\[
+P(Y=y,X=k) = \binom{m}{y}\binom{n-m}{k-y} p^{k}q^{n-k}
+\]
+So,
+\[
+P(Y=y \given{X=k}) = \frac{P(Y=y,X=k)}{P(X=k)} = \frac{\dbinom{m}{y} \dbinom{n-m}{k-y} p^{k} q^{n-k}}{\dbinom{n}{k}p^{k}q^{n-k}} = \frac{\dbinom{m}{y} \dbinom{n-m}{k-y}}{\dbinom{n}{k}}
+\]
+This shows that $Y\given{X=k} \sim$ Hypergeometric with population size $n$, sample size $m$ and subpopulation size $k$. (Note: the conditional distribution of $Y$ does NOT depend on $p$.)
+\end{proof}
+
+\paragraph{\#3.}A coin lands heads with probability $p$. My friend and I take turns tossing the coin, with my friend tossing first. Whoever gets the first head wins. Find the chance that my friend wins, in two ways:
+\begin{enumerate}
+\item[a)] For each $i$, find the chance my friend wins on toss $i$, and sum.
+\item[b)] Let $x$ be the chance that you are trying to find. Set up an equation for $x$ using the observation that either my friend wins on the first toss, or we both get tails and then the game starts over. Solve for $x$ and confirm that it's the same as what you got in part a). This is an example of how arranging probability calculations in the right way can reduce the amount of algebra you have to do.
+\end{enumerate}
+
+\begin{proof}
+\begin{enumerate}
+\item[a)] Let $A_i$ be the event that your friend wins on the $i^{th}$ toss. A simple analysis shows $P(A_1) = p$, $P(A_2) = 0$, $P(A_3) = q^2 p$,\ldots So,
+\[
+P(A_i) = 
+\begin{cases}
+q^{i-1} p &\text{ if $i$ is odd} \\
+0 &\text{ if $i$ is even}
+\end{cases}
+\]
+If $A$ is the event your friend wins, then 
+\begin{align*}
+P(A) &= \SUM{i}{1}{\infty} P(A_i) = \SUM{i}{1}{\infty} P(A_{2i-1}) = \SUM{i}{1}{\infty} q^{2i-2} p \\
+&= \frac{p}{q^2} \SUM{i}{1}{\infty} \left(q^2\right)^{i} \\
+&= \frac{p}{q^2} \left(\frac{1}{1-q^2} - 1 \right) \\
+&= \frac{p}{1-q^2} \\
+&= \frac{1}{1+q}
+\end{align*}
+\item[b)] Consider the  partitioning
+\begin{align*}
+P(\text{friend wins}) &= P(\text{friend tosses heads first}) \\
+&+ P(\text{both toss tails then friend tosses heads}) 
+\end{align*}
+
+\end{enumerate}
+
+\end{proof}
+
+
+\end{document}

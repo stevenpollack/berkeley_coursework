@@ -1,0 +1,94 @@
+\documentclass[12pt,titlepage]{article}
+
+\usepackage{mcgill,palatino,fancyhdr}
+
+\lhead{STAT201A -- Sec. 102}
+\chead{HW \#6. }
+\rhead{Steven Pollack -- 24112977}
+\cfoot{\thepage}
+
+\title{STAT201A -- Sec. 102 \\ Homework \#6. }
+\author{Steven Pollack \\ 24112977}
+\date{}
+
+\newcommand{\orth}{\perp\!\!\!\perp}
+
+\begin{document}
+\maketitle
+
+\pagestyle{empty}
+\newpage
+\pagestyle{fancy}
+\paragraph{\#1.}
+\begin{proof}
+So, given $N_{(0,t)} = n$ and $N_{(0,t)}\sim $ Poisson($\lambda$), and the fact that cutting up $(0,t)$ into $(0,a) \sqcup (a,b) \sqcup (b,t)$ yields 3 independent Poisson processes with rates $a\lambda/t$, $(b-a)\lambda/t$ and $(t-b)\lambda/t$ intuition immediately has that $(N_{(0,a)}, N_{(a,b)}, N_{(b,t)}) \sim$ Multinomial with $n$ trials, and 3 outcomes with probabilities $p_{1} = a/t$, $p_{2} = (b-a)/t$ and $p_3 = (t-b)/t$. Why?
+\[
+\frac{P\left( (N_{(0,a)}, N_{(a,b)}, N_{(b,t)}) = (x_1, x_2, x_3) , N_{(0,t)} = n \right)}{P(N_{(0,t)}=n)} =P\left( (N_{(0,a)}, N_{(a,b)}, N_{(b,t)}) = (x_1, x_2, x_3) \given{N_{(0,t)} = n} \right)
+\]
+and $N_{(0,a)} + N_{(a,b)} + N_{(b,t)} = N_{(0,t)}$, hence using this fact and the independence of these subprocesses, we have that
+\begin{align*}
+P\left( (N_{(0,a)}, N_{(a,b)}, N_{(b,t)}) \right. &= \left. (x_1, x_2, x_3) , N_{(0,t)} = n \right) \\
+&= P\left( (N_{(0,a)}, N_{(a,b)}, N_{(b,t)}) = (x_1, x_2, n-(x_1+x_2)) \right)\\
+&= P(N_{(0,a)}=x_1)P(N_{(a,b)}=x_2)P(N_{(b,t)}=n-(x_1+x_2)) \\
+&= \left(\frac{a}{t}\right)^{x_1} \frac{e^{-\frac{a\lambda}{t}} \lambda^{x_1}}{x_1 !}  \left(\frac{b-a}{t}\right)^{x_2} \frac{e^{-\frac{(b-a)\lambda}{t}} \lambda^{x_2}}{x_2 !}  \left(\frac{t-b}{t}\right)^{n-x_1-x_2} \frac{e^{-\frac{(t-b)\lambda}{t}} \lambda^{n-x_1-x_2}}{(n-x_1-x_2)!} \\
+&=  \frac{e^{-\lambda( \frac{a}{t} + \frac{b-a}{t} + \frac{t-b}{t} )} \lambda^{x_1 + x_2 + n - x_1 - x_2}}{x_1 ! x_2 ! (n-x_1 - x_2)!}\left(\frac{a}{t}\right)^{x_1}\left(\frac{b-a}{t}\right)^{x_2}\left(\frac{t-b}{t}\right)^{n-x_1-x_2} \\
+&= e^{-\lambda} \frac{\lambda^n}{n!} \binom{n}{x_1 , x_2 , n-x_1-x_2}\left(\frac{a}{t}\right)^{x_1}\left(\frac{b-a}{t}\right)^{x_2}\left(\frac{t-b}{t}\right)^{n-x_1-x_2}
+\end{align*}
+ Hence, 
+\[
+P\left( (N_{(0,a)}, N_{(a,b)}, N_{(b,t)}) = (x_1, x_2, x_3) \given{N_{(0,t)} = n} \right) = \binom{n}{x_1 , x_2 , x_3}\left(\frac{a}{t}\right)^{x_1}\left(\frac{b-a}{t}\right)^{x_2}\left(\frac{t-b}{t}\right)^{x_3}
+\]
+\end{proof}
+
+\paragraph{\#2.} 
+\begin{proof}
+Let $\delta t$ denote a small neighborhood about $t \in (0,1)$ of width $dt$, and note that
+\[
+P( T_r \in dt , {N_{(0,1)} = n}) = P( N_{(0,t)} = r-1, N_{\delta t}= 1, N_{(t,1)} = n-r)
+\]
+Since the $N_{I}$'s are independent, this identity amounts to saying:
+\begin{align*}
+P( T_r \in dt , {N_{(0,1)} = n}) &= P( N_{(0,t)} = r-1) P(N_{\delta t}= 1) P(N_{(t,1)} = n-r) \\
+&= \left( e^{-t\lambda} \frac{(t\lambda)^{r-1}}{(r-1)!} \right) \left( e^{-dt\lambda} {\lambda dt} \right) \left( e^{-(1-t)\lambda} \frac{((1-t)\lambda)^{n-r}}{(n-r)!} \right) \\
+&=\frac{e^{-(1+dt)\lambda} \lambda^{n}}{n!} \left( \frac{n!}{(r-1)! (n-r)!} t^{r-1} (1-t)^{n-r} \, dt \right) \\
+&\approx P_{n} \frac{\Gamma(r+s)}{\Gamma(r) \Gamma(s)} t^{r-1} (1-t)^{s-1} \, dt
+\end{align*}
+where $s = n-r+1$, and $P_n = P(N_{(0,1)}=n)$. Hence,
+\[
+P( T_r \in dt \given{N_{(0,1)} = n}) = \frac{P( T_r \in dt , {N_{(0,1)} = n})}{P_n} = \frac{\Gamma(r+s)}{\Gamma(r) \Gamma(s)} t^{r-1} (1-t)^{s-1} 
+\]
+which is the density for a $\beta$eta random variable with parameters $r$ and $s$. 
+\end{proof}
+\paragraph{\#3.} 
+\begin{proof}
+Using the same technique as in question \#2 (and letting $t < s$):
+\begin{align*}
+P(T_{1} \in dt, T_{n} \in ds, N_{(0,1)} = n) &= P(N_{\delta t} = 1, N_{(t,s)} = n-2, N_{\delta s}=1) \\
+&=\left(e^{-dt \, \lambda} \lambda \, dt \right) \left( e^{-(s-t)\lambda} \frac{(s-t)^{n-2} \lambda^{n-2}}{(n-2)!} \right) \left(e^{-ds \, \lambda} \lambda \, ds \right) \\
+&= e^{-(s-t + dt + ds)\lambda} \frac{\lambda^n}{n!} \, \binom{n}{1, 1, n-2} (s-t)^{n-2} \, dt \, ds \\
+&\approx P_{n} \; n(n-1) (s-t)^{n-2} \, dt \, ds
+\end{align*}
+Hence, 
+\[
+P(T_{1} \in dt, T_{n} \in ds \given{N_{(0,1)} = n}) = \frac{P(T_{1} \in dt, T_{n} \in ds, N_{(0,1)} = n)}{P_{n}} = n(n-1)(s-t)^{n-2} \, dt \, ds
+\]
+And this happens to be the joint density of $(U_{(1)}, U_{(n)})$ the first and last order statistics for $U_1, \ldots, U_n \iid $ Uniform([0,1]) random variables.  
+\end{proof}
+
+\paragraph{\#4.}
+\begin{proof}
+Given that for $r \in \N$ we may express $T_r = \SUM{i}{1}{r} W_i \sim \Gamma(r,\lambda)$, where $W_i \iid $ Exp($\lambda$), we have that $T_{r+s} = \SUM{i}{1}{r+s} W_i$, and thus
+\begin{align*}
+\cov\left(T_r, T_{r+s}\right) &= \cov\left( \SUM{i}{1}{r} W_i,  \SUM{i}{1}{r} W_i +  \SUM{j}{r+1}{s} W_j\right) \\
+&= \cov\left( \SUM{i}{1}{r} W_i,  \SUM{i}{1}{r} W_i\right) + \cov\left( \SUM{i}{1}{r} W_i, \SUM{j}{r+1}{s} W_j\right) \\
+&= \var(T_{r}) + \SUM{i}{1}{r}\SUM{j}{r+1}{s}\cov(W_i,W_j) \\
+&= \frac{r}{\lambda^2}
+\end{align*}
+Since $W_i \orth W_j$ for $i \neq j$, and the variance of a $\Gamma(r,\lambda)$ random variable is $r/\lambda^2$. Consequently, 
+\[
+\rho(T_r, T_{r+s}) = \frac{\cov(T_r, T_{r+s})}{\sigma_{r} \sigma_{r+s}} = \frac{r/\lambda^2}{\sqrt{r}/\lambda \cdot \sqrt{r+s}/\lambda} = \sqrt{\frac{r}{r + s}}
+\]
+This indicates that $\rho(T_r, T_{r+s}) \to 0$ as $s \to \infty$, which makes sense as the greater $s-r$ becomes, the less it would makes sense for information about $T_r$ to help us determine anything about $T_{r+s}$. 
+\end{proof}
+
+\end{document}

@@ -1,0 +1,114 @@
+\documentclass[12pt,titlepage]{article}
+
+\usepackage{mcgill,palatino,fancyhdr}
+
+\lhead{STAT201A -- Sec. 102}
+\chead{HW \#9 }
+\rhead{Steven Pollack -- 24112977}
+\cfoot{\thepage}
+
+\title{STAT201A -- Sec. 102 \\ Homework \#9 }
+\author{Steven Pollack \\ 24112977}
+\date{}
+
+\renewcommand{\P}{\mathbb{P}}
+
+\begin{document}
+\maketitle
+
+\pagestyle{empty}
+\newpage
+\pagestyle{fancy}
+
+\paragraph{\#1.}
+\begin{proof}
+Let $(I,II)$ be the random vector that represents the color of the ball drawn from box $I$ and box $II$. So, $(I,II) = (B,W)$ means a blue ball was drawn from $I$ and a white from $II$. Furthermore, set $X_n$ to be the count of white balls in box $I$, and note there exist three cases
+\begin{align*}
+X_{n} &= X_{n-1} -1 &\EQ (I,II) &= (W,B) \\
+X_{n} &= X_{n-1} &\EQ (I,II) &= (B,B) \text{ or } (W,W) \\
+X_{n} &= X_{n-1} + 1 &\EQ (I,II) &= (B,W) 
+\end{align*}
+Also, we note that $X_0 \sim $ HypGeo($N=10,G=4,n=5$). Now, it's clear that $P(X_n = i_n \given{ X_0 = i_0, X_1 = i_1, \ldots, X_{n-1} = i_{n-1}}) = P(X_n = i_n \given{X_{n-1}=i_{n-1}})$ thus $\set{X_{n}}$ is an irreducible, aperiodic Markov chain with a finite state-space. Hence, our big theorem says that there exists a unique distribution $\pi$ such that $\pi = \pi \P$. So, let's try calculating $\P$.
+
+First, for $i,j \in \set{0,1,2,3,4}$, if $j \neq i, i\pm 1$, then $p_{i,j} = 0$. Next, from our analysis above, 
+\begin{align*}
+p_{i,i} &= P((I,II) = (B,B) \text{ or } (W,W) \given{\text{box I has $i$ white balls}}) &&= \frac{5-i}{5}\frac{1+i}{5} + \frac{i}{5}\frac{4-i}{5} \\
+p_{i,i+1} &= P((I,II) = (B,W) \given{\text{box I has $i$ white balls}}) &&= \frac{5-i}{5}\frac{4-i}{5} \\
+p_{i,i-1} &=  P((I,II) = (W,B) \given{\text{box I has $i$ white balls}}) &&= \frac{i}{5}\frac{1+i}{5}
+\end{align*}
+Which yields
+\[
+\P =\frac{1}{25}
+\left(
+\begin{array}{ccccc}
+ 5 & {20} & 0 & 0 & 0 \\
+ 2 & 11 & 12 & 0 & 0 \\
+ 0 & 6 & 13 & 6 & 0 \\
+ 0 & 0 & 12 & 11 & 2 \\
+ 0 & 0 & 0 & 20 & 5
+\end{array}
+\right)
+\]
+and if we let $\pi_{i} = P(X_0 = i) = \binom{4}{i}\binom{6}{5-i}/\binom{10}{5}$, then we see that $\pi = (\pi_0, \pi_1, \pi_2, \pi_3, \pi_4)$ solves the balance equations, $\pi \P = \pi$. 
+
+Hence, $\pi$ is our stationary distribution and thus $\pi_0 = 1/42$ is the amount of time we expect box $I$ to be empty.
+\end{proof}
+
+\paragraph{\#2.}
+\begin{proof}
+\begin{enumerate}
+\item Let $T_j$ be the random variable that counts the number of steps a chain $\set{X_n}$ takes to reach state $j$, and write $m_{ij} = E(T_j \given{X_0 = i})$. Then,
+\begin{align*}
+E(T_j \given{X_0=i}) &= \SUM{k}{1}{\infty} k P(T_j = k\given{X_0=i}) \\
+&= P(T_j = 1\given{X_0 = i}) + 2 P(T_j =2 \given{X_0=i}) + 3 P(T_j = 3 \given{X_0 = i}) + \cdots \\% 4 P(T_j = 4 \given{X_0 = i}) + \cdots 
+&= p_{ij} + 2\sum_{k_1 \neq j} p_{i k_1}p_{k_1 j} + 3 \sum_{k_1,k_2 \neq j} p_{i k_1}p_{k_1 k_2} p_{k_2 j} + \cdots \\
+&= \left(p_{ij} + \sum_{k_1 \neq j} p_{i k_1}p_{k_1 j} +  \sum_{k_1,k_2 \neq j} p_{i k_1}p_{k_1 k_2} p_{k_2 j} + \cdots \right)  \\
+&+ \left( \sum_{k_1 \neq j} p_{i k_1}p_{k_1 j} +  2 \sum_{k_1,k_2 \neq j} p_{i k_1}p_{k_1 k_2} p_{k_2 j} + 3 \sum_{k_1,k_2,k_3\neq j}p_{i k_1}p_{k_1 k_2} p_{k_2 k_3} p_{k_3 j} + \cdots \right) \\
+&= S_1 + S_2
+\end{align*}
+However, notice that $S_1 = \SUM{k}{1}{\infty} P(T_j = k \given{X_0 = i})$, hence $S_1 = 1$. Furthermore, 
+\begin{align*}
+S_2 &= \sum_{k_1 \neq j} p_{i k_1}\left( p_{k_1 j} +  \sum_{k_2 \neq j} 2 p_{k_1 k_2} p_{k_2 j} + \sum_{k_2,k_3\neq j}3 p_{k_1 k_2} p_{k_2 k_3} p_{k_3 j} + \cdots \right) \\
+&= \sum_{k_1 \neq j} p_{i k_1} E(T_j \given{X_0 = k_1}) \\
+&= \sum_{k_1 \neq j} p_{i k_1} m_{k_1 j}
+\end{align*}
+Thus,
+\[
+m_{ij} = 1 + \sum_{k\neq j} p_{ik} m_{kj}
+\]
+\item Using the result in part 1.
+\begin{align*} % E\left(T_{j}\given{X_0}\right)
+\sum_{i} \pi_i m_{ij} &= \sum_{i}\left( \pi_{i} + \sum_{k\neq j} \pi_i p_{ik}m_{kj}\right) \\
+\EQ E_{X_0}\left[m_{ij}\right]&= E_{X_0}\left[1 +\sum_{k\neq j} p_{ik}m_{kj}\right] \\
+\EQ E_{X_0}\left[m_{ij}\right] &= 1 + \sum_{k\neq j}  E_{X_0}\left[p_{ik}m_{kj}\right] \\
+\EQ  E_{X_0}\left[m_{ij}\right] &= 1 + \sum_{k\neq j} m_{kj} E_{X_0}\left[p_{ik}\right] \\
+\EQ  E_{X_0}\left[m_{ij}\right] &= 1 + \sum_{k\neq j} m_{kj}\pi_k
+\end{align*}
+Where the second to last equality stems from the fact that $\sum_{k} \pi_{i}p_{ik} = \pi_k$ since $\pi$ is the stationary distribution of $\set{X_n}$. Finally, we observe that $E_{X_0}[m_{ij}] = m_{jj}\pi_j + \sum_{k\neq j} m_{kj} \pi_k$ to write
+\[
+ E_{X_0}\left[m_{ij}\right] = 1 + \sum_{k\neq j} m_{kj}\pi_k  \EQ m_{jj} \pi_j = 1 \EQ m_{jj} = \frac{1}{p_j}
+\]
+
+\end{enumerate}
+
+\end{proof}
+
+
+\paragraph{\#3.}
+\begin{proof}
+Set $D_1 = Y - \hat{Y}$, and $D_2 = X_2 - \hat{X}$, and by the hint, we note that $\cov(D_1, X_i) = 0$ for $i=1,2$ and $\cov(D_2, X_1) = 0$. Also, note that we may write $\hat{X} = X_2 - D_2$, hence
+\begin{align*}
+\tilde{Y} &= \mu_{Y} + c_{*1}(X_1 - \mu_{X_1}) + c_{*2}(\hat{X}-\mu_{X_2}) \\
+&= \mu_{Y} + c_{*1}(X_1 - \mu_{X_1}) + c_{*2}(X_2 -\mu_{X_2} - D_2) \\
+&= \hat{Y} - c_{*2} D_2
+\end{align*}
+Thus, using our first observations 
+\begin{align*}
+\cov(Y - \tilde{Y}, X_1) &= \cov((Y-\hat{Y}) + c_{*2}D_2, X_1) \\
+&= \cov(D_1, X_1) + c_{*2}\cov(D_2,X_1) \\
+&= 0
+\end{align*}
+which shows that $\tilde{Y}$ is the best linear predictor of $Y$ based on $X_1$. 
+\end{proof}
+
+\end{document}

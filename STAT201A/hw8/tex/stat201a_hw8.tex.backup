@@ -1,0 +1,164 @@
+\documentclass[12pt,titlepage]{article}
+
+\usepackage{mcgill,palatino,fancyhdr}
+
+\lhead{STAT201A -- Sec. 102}
+\chead{HW \#8. }
+\rhead{Steven Pollack -- 24112977}
+\cfoot{\thepage}
+
+\title{STAT201A -- Sec. 102 \\ Homework \#8. }
+\author{Steven Pollack \\ 24112977}
+\date{}
+
+\begin{document}
+\maketitle
+
+\pagestyle{empty}
+\newpage
+\pagestyle{fancy}
+
+\paragraph{\#1.}
+\begin{proof}
+Given a generic prediction, $W = g(X)$, and setting $h(X) = E(Y\given{X}) - W$, the MSE of $W$ is $E[(Y-W)^2]$ and can be rewritten as
+\begin{align*}
+E\left[(Y-W)^2\right] &= E\left( E\left[(Y-W)^2 \given{X}\right]\right) \\
+&= E\left( E\left[ \set{ (Y- E(Y\given{X})) + h(X) }^2 \given{X} \right] \right) \\
+&=E\left( E\left[ (Y-E(Y\given{X}))^2 \given{X} \right] \right) + 2E\left(E\left[ (Y-E(Y\given{X})) h(X) \given{X} \right] \right) + E\left(E \left[ h(X)^2 \given{X} \right] \right) \\
+&= \var(Y\given{X}) + 2E\left(h(X) \underbrace{E\left[ Y-E(Y\given{X}) \given{X}\right]}_{=0}\right)  + E\left[ h(X)^2 \right]  \\
+&= \var(Y \given{X}) + E\left[ h(X)^2 \right]
+\end{align*}
+Hence, the MSE of $Y$ and $W$ is minimized when $h(X) = 0 \EQ g(X) = E(Y \given{X})$. 
+\end{proof}
+
+\paragraph{\#2.}
+\begin{proof}
+Let $I_1$ indicate the event that a widget of the first kind is drawn, $I_2 = 1-I_1$ indicate for a widget of the second kind and set $Y$ to be the random variable that identifies the drawn widget. It follows that
+\begin{align*}
+E(Y \given{I_1}) = \mu I_1 + \nu I_2
+\intertext{and }
+\var(Y \given{I_1}) = \sigma^2 I_1 + \tau^2 I_2
+\end{align*}
+Thus, the law of iterated expectations says that
+\[
+E(Y) = E(E(Y\given{I_1})) = \frac{\mu + 2 \nu}{3}
+\]
+and our iterated variance rule shows that
+\begin{align*}
+\var(Y) &= E(\var(Y\given{I_1})) + \var(E(Y\given{I_1})) \\
+&= E\left(\sigma^2 I_1 + \tau^2 I_2\right) + \var\left( \mu I_1 + \nu I_2 \right) \\
+&= \frac{\sigma^2 + 2 \tau^2}{3} + \mu^2\var(I_1) + \nu^2 \var(I_2) +2\mu\nu\cov(I_1, I_2) \\
+&= \frac{3(\sigma^2 + 2 \tau^2) + 2(\mu - \nu)^2}{9}
+\end{align*}
+\end{proof}
+
+\paragraph{\#3.} Consider $B \sim$ HypGeo$(b_0 + w_0, b_0, d)$, and $\beta$ the number of black balls in a sample of size $n$. Then $\beta \sim$ HypGeo$(N, b+B, n)$, where $N= d + b+ w$. Then, $E(\beta \given{B}) = n \frac{b+B}{N}$ and
+\begin{align*}
+ E(\beta) &= E(E(\beta\given{B})) \\
+&= \frac{n}{N}E(b+B) \\
+&= \frac{n}{N}(b + E(B)) \\
+&= \frac{n}{N}\left(b + d\frac{b_0}{b_0+w_0}\right)
+\end{align*}
+and
+\begin{align*}
+\var(\beta) &= \var(E(\beta\given{B})) + E(\var(\beta\given{B})) \\
+&= \var\left(n\frac{b+B}{N}\right) + E\left( n \frac{b+B}{N}\frac{d+w-B}{N}{\frac{N-n}{N-1}} \right) \\
+&= \frac{n^2}{N^2}\var(b+B) + \frac{n}{N^2}{\frac{N-n}{N-1}} E((b+B)(d+w-B)) \\
+&=\frac{n^2}{N^2}\var(B) + \frac{n}{N^2}{\frac{N-n}{N-1}}  E(bd +(d+w-b)B-B^2) \\
+&= \frac{n^2}{N^2}\var(B) + \frac{n}{N^2}{\frac{N-n}{N-1}} \left( bd +(d+w-b)E(B)-E(B^2)\right) \\
+&= \frac{n^2}{N^2}\var(B) + \frac{n}{N^2}{\frac{N-n}{N-1}} \left( bd +(d+w-b)E(B)-\var(B) - E(B)^2\right) \\
+&=\frac{n}{N^2}\left(n - \frac{N-n}{N-1}\right)\var(B) + \frac{n}{N^2}{\frac{N-n}{N-1}} \left( bd +(d+w-b)E(B) - E(B)^2\right) \\
+&=\frac{n(n-1)}{N(N-1)}\var(B) + \frac{n}{N^2}{\frac{N-n}{N-1}} \left( bd +(d+w-b)E(B) - E(B)^2\right)
+\end{align*}
+where
+\[
+\var(B) = d \left(\frac{b_0}{b_0+w_0}\right) \left(\frac{w_0}{b_0 + w_0}\right) \left(\frac{b_0 + w_0 - d}{b_0 + w_0 -1} \right)
+\]
+
+\paragraph{\#4.}
+\begin{enumerate}
+\item Given $X, X_1, X_2, \ldots \iid F_{X}$, where $X_i$ have MGF $\psi_{X}$, 
+\begin{align*}
+\psi_{S}(t) &= E\left[ e^{tS} \right] \\
+&= E\left[ E\left( e^{t\SUM{i}{1}{N}X_i} \biggl| {N} \right) \right] \\
+&= E\left[ \psi_{X}(t)^{N} \right] \\
+&= E\left[ \exp\set{ N \log(\psi_{X}(t))} \right] \\
+&= \psi_{N}(\log(\psi_{X}(t))
+\end{align*}
+where the third equality comes from the fact that $E\left(\exp\set{t\SUM{i}{1}{N}X_i}\given{N=n}\right) = \psi_{X}(t)^{n}$. 
+\item Given $N \sim$ Poisson$(\lambda)$:
+\begin{align*}
+\psi_{N}(t) &= E(e^{tN}) \\
+&= \SUM{n}{0}{\infty} e^{tn} e^{-\lambda} \frac{\lambda^n}{n!} \\
+&= e^{-\lambda} \SUM{n}{0}{\infty} \frac{(e^t\lambda)^n}{n!} \\
+&= e^{-\lambda} e^{e^t \lambda} \\
+&= \exp\set{\lambda(e^t-1)}
+\end{align*}
+\item For $I$ an indicator random variable with $P(I=1) = p$, the mgf of $I$ is: \[\psi_{I}(t) = 1 + p(e^{t}-1)\]
+Putting this all together, if we toss a coin $N \sim$ Poisson$(\lambda)$ times, where each head has probability $p$, then $X$, the number of heads in $N$ tosses looks like $\SUM{i}{1}{N} I_i$, where $I_i$ indicates a heads on the $i^{th}$ toss. Thus, 
+\begin{align*}
+\psi_{X}(t) &= \psi_{N}(\log(\psi_{I_1}(t))) \\
+&= \exp\set{\lambda(\exp\set{\log\psi_{I_1}(t)}-1)} \\
+&= \exp\set{\lambda(\psi_{I_1}(t) - 1)} \\
+&= \exp\set{\lambda p(e^t - 1)}
+\end{align*}
+which shows that $X \sim $ Poisson($\lambda p$). 
+\end{enumerate}
+
+\paragraph{\#5.}
+\begin{enumerate}
+\item Let $\Theta \sim \beta$eta($r,s$) be the probability of getting a heads (endowed with a $\beta(r,s)$ prior density), and note that our experiment follows $X \sim$ Geo$(\Theta$). Hence, our likelihood is $P(X = k \given{\Theta \in d\theta}) = (1-d\theta)^{k-1}d\theta$ and $P(\Theta \in d\theta) \propto d\theta^{r-1}(1-d\theta)^{s-1}$. Using the formula, posterior $\propto$ likelihood $\times$ prior, we have
+\begin{align*}
+P(\Theta \in d\theta \given{X = k}) &\propto P(X = k \given{\Theta \in d\theta}) \cdot P(\Theta \in d\theta) \\
+&\propto d\theta^{r}(1-d\theta)^{s+k-2}
+\end{align*}
+Which means our posterior density is $\beta$eta$(r+1,s+k-1)$, making the beta densities are a family of conjugate priors, here. 
+\item For a fixed $r,s$ we see that increasing $k$ puts more mass to the left of 1/2, which makes sense: a heavier ``head'' implies a lower probability of flipping heads, and hence a longer waiting time. 
+\end{enumerate}
+
+\paragraph{\#7.}
+\begin{proof}
+\begin{enumerate}
+\item Consider the experiment where we have two particles of type $x$ and $y$ and their frequency of appearance follows $X \sim$ Exp($\lambda$) and $Y \sim$ Exp($\mu$) for types $x$ and $y$, respectively. If $I$ indicates on the event that a particle of type $y$ appearance first, then $E(I) = P(X > Y)$. But, using the tower rule
+\[
+E(I) = E[E(I \given{Y})] = E[ e^{-\lambda Y} ] = \psi_{Y}(-\lambda) = \left(1 + \frac{\lambda}{\mu}\right)^{-1} = \frac{\mu}{\mu+\lambda}
+\]
+since
+\[
+E(I\given{Y\in (y-dy,y+dy) }) = P(X > y) = \int_{y}^{\infty} \lambda e^{-\lambda t} \, dt = e^{-\lambda y} 
+\]
+and $\psi_{Y}(t) = (1-t/\mu)^{-1}$. This answer still makes sense for $\mu =\lambda$, since in this instance, both particles have the same frequency of occurrence, so it's 50/50 that you'll get one over the other.
+\item From the method of MGF's we have that $\psi_{cY}(t) = \psi_{Y}(ct) = (1-t/(\mu/c))^{-1}$, hence $cY \sim$ Exp($\mu/c$), and performing the entire argument above with $Y' = cY$, we have 
+\[
+P(X > cY) = \frac{\mu/c}{\mu/c+\lambda} = \frac{\mu}{\mu + c\lambda}
+\]
+\item From b)
+\[
+P(X > cY) =  P(X/Y > c) = \frac{\mu}{\mu + c\lambda} \EQ F_{X/Y}(c) = 1 - \frac{\mu}{\mu+c\lambda} = \frac{c\lambda}{\mu + c \lambda}
+\]
+\item To find the medium, we want $m$ such that $F_{X/Y}(m) = 50\%$. So, 
+\[
+F_{X/Y}(m) = \frac{1}{2} \EQ \frac{m\lambda}{\mu + m\lambda} = \frac{1}{2} \EQ 2m \lambda = \mu + m\lambda \EQ m = \frac{\mu}{\lambda}
+\]
+Since the median of $Y$ is $m_{Y} = \ln(2)/\mu$, we have that $m = m_{X}/m_{Y}$. Also, $E(Y) = \mu^{-1}$ shows that $m = E(X)/E(Y)$.
+\item It's a trap! If you differentiate $F_{X/Y}$ with respect to $c$, you recover the density of $X/Y$:
+\[
+f_{X/Y}(c) = \frac{\lambda \mu}{(\mu+\lambda c)^2} = \Theta\left(\frac{1}{c^2}\right)
+\]
+Hence, $E(X/Y) = \int_{0}^{\infty} c f_{X/Y}(c) \, dc = + \infty$, since $c f_{X/Y}(c) = \Theta(c^{-1})$. Thus, $X/Y$ has a median but no density!
+\end{enumerate}
+
+\paragraph{\#8.}
+\begin{proof}
+\begin{enumerate}
+\item For $X \sim \Gamma$amma($r,\lambda$), $\mu_{X} = r/\lambda$ and $\sigma_{X}^{2} = r/\lambda^2$, hence
+\[
+r = \mu_{X} \lambda = \sigma_{X}^{2} \lambda^2 \EQ r= \frac{\mu_{X}^2}{\sigma_{X}^2}
+\]
+
+\end{enumerate}
+
+\end{proof}
+
+\end{document}
+

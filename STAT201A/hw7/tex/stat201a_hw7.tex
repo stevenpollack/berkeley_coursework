@@ -1,0 +1,302 @@
+\documentclass[12pt,titlepage]{article}\usepackage{graphicx, color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\definecolor{fgcolor}{rgb}{0.2, 0.2, 0.2}
+\newcommand{\hlnumber}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlfunctioncall}[1]{\textcolor[rgb]{0.501960784313725,0,0.329411764705882}{\textbf{#1}}}%
+\newcommand{\hlstring}[1]{\textcolor[rgb]{0.6,0.6,1}{#1}}%
+\newcommand{\hlkeyword}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlargument}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hlcomment}[1]{\textcolor[rgb]{0.180392156862745,0.6,0.341176470588235}{#1}}%
+\newcommand{\hlroxygencomment}[1]{\textcolor[rgb]{0.43921568627451,0.47843137254902,0.701960784313725}{#1}}%
+\newcommand{\hlformalargs}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hleqformalargs}[1]{\textcolor[rgb]{0.690196078431373,0.250980392156863,0.0196078431372549}{#1}}%
+\newcommand{\hlassignement}[1]{\textcolor[rgb]{0,0,0}{\textbf{#1}}}%
+\newcommand{\hlpackage}[1]{\textcolor[rgb]{0.588235294117647,0.709803921568627,0.145098039215686}{#1}}%
+\newcommand{\hlslot}[1]{\textit{#1}}%
+\newcommand{\hlsymbol}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlprompt}[1]{\textcolor[rgb]{0.2,0.2,0.2}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+
+\usepackage{mcgill,palatino,fancyhdr}
+
+\lhead{STAT201A -- Sec. 102}
+\chead{HW \#7. }
+\rhead{Steven Pollack -- 24112977}
+\cfoot{\thepage}
+
+\title{STAT201A -- Sec. 102 \\ Homework \#7. }
+\author{Steven Pollack \\ 24112977}
+\date{}
+
+\begin{document}
+\maketitle
+
+\pagestyle{empty}
+\newpage
+\pagestyle{fancy}
+\paragraph{\#1.}
+\begin{proof}
+\begin{enumerate}
+\item[a)] Given $X_i \sim$ Poisson($\lambda_i$), 
+\begin{align*}
+\psi_{X_i}(t) &= E(e^{tX_i}) \\
+&= \SUM{x}{0}{\infty} e^{tx} e^{-\lambda_i} \frac{\lambda_i^x}{x!} \\
+&= e^{-\lambda_i} \SUM{x}{0}{\infty} \frac{\left(e^{t}\lambda_i\right)^{x}}{x!} \\
+&= e^{-\lambda_i} e^{e^{t} \lambda_i} \\
+&= \exp\set{\lambda_{i}(e^{t}-1)} 
+\end{align*}
+\item[b)] Now, supposing $X_1 \orth X_2$ and using the fact that $\psi_{X+Y} = \psi_X \psi_{Y}$ for $X \orth Y$, we have
+\begin{align*}
+\psi_{X_1+X_2}(t) &= \psi_{X_1}(t) \psi_{X_2}(t) \\
+&= \exp\set{\lambda_{1}(e^{t}-1)}  \exp\set{\lambda_{2}(e^{t}-1)} \\
+&= \exp\set{(\lambda_1+\lambda_2)(e^{t}-1)} \\
+&= \psi_{Y}(t)
+\end{align*}
+where $Y \sim$ Poisson($\lambda_1 + \lambda_2$)
+\end{enumerate}
+\end{proof}
+
+\paragraph{\#2.}
+\begin{proof}
+Let $X$ have density $f_{X}(x) = \frac{1}{2} e^{-\ord{x}} I_{\R}(x)$. Then, 
+\begin{align*}
+\psi_{X}(t) &= E(e^{tX}) \\
+&= \frac{1}{2}\int_{\R} e^{tx} e^{-\ord{x}} \, dx \\
+&= \frac{1}{2} \left( \int_{-\infty}^{0} e^{tx}e^{x} \, dx + \int_{0}^{\infty} e^{tx} e^{-x} \, dx \right) \\
+&= \frac{1}{2}\left( \int_{-\infty}^{0} e^{(t+1)x} \, dx + \int_{0}^{\infty} e^{(t-1)x}  \, dx\right)
+\end{align*}
+Clearly, the first integral will not converge unless $t+1 > 0$ and the second will not converge unless $t-1 < 0$. That is, both will not converge unless $-1 < t < 1$. In which case, 
+\[
+\psi_{X}(t) = \frac{1}{2}\left(\frac{1}{1+t} + \frac{1}{1-t}\right) = \frac{1}{1-t^2}
+\]
+Finally, since $-1 < t < 1$ (and therefore $0 < t^2 <1$, we have that 
+\[
+\frac{1}{1-t^2} = \SUM{k}{0}{\infty} (t^2)^{k}
+\]
+Hence,
+\[
+\frac{d^n}{dt^n}\psi_{X}(t) = \SUM{k}{0}{\infty}[2k]_{n-1} t^{2k-n}
+\]
+Thus,
+\[
+\psi_{X}^{(n)}(0) = 
+\begin{cases}
+0 &\text{if $n = 2k+1$ for some $k \in \N$} \\
+(2k)! &\text{ if $n = 2k$ for some $k \in \N$}
+\end{cases}
+\]
+\end{proof}
+
+\paragraph{\#3.}
+\begin{enumerate}
+\item[a)] Recall that for $X > 0$ and $c > 0$, Markov's inequality says that 
+\[
+P(X \geq c) \leq \frac{E(X)}{c}
+\]
+Moreover, we have that for any random variable $X$, the transformation $e^{tX}$ is non-negative, and thus applying Markov's inequality to $e^{tX}$, with $c = e^{tx}$ for $t > 0$ and $x \in \R$ yields
+\[
+P\left( e^{tX} \geq e^{tx} \right) \leq \frac{E(e^{tX})}{e^{tx}}
+\]
+However, $\exp$ being a monotonically increasing function allows us to write $P(X \geq x ) = P(e^{tX} \geq e^{tx})$, and thus
+\[
+P(X \geq x) \leq e^{-tx}\psi_{X}(t)
+\]
+\item[b)] Using the result in class that gives
+\[
+\psi_{X}(t) = \left(\frac{\lambda}{\lambda - t}\right)^{r}
+\]
+for $X \sim \Gamma$amma($r,\lambda$), we have that 
+\[
+P\left(X \geq \frac{2r}{\lambda} \right) \leq e^{-2tr/\lambda} \left(\frac{\lambda}{\lambda-t}\right)^{r} = \left( e^{2t/\lambda}(1-t/\lambda)\right)^{-r}
+\]
+but since this holds for all $t < \lambda$, setting $t = \lambda/2$ yields the bound
+\[
+P\left(X \geq \frac{2r}{\lambda} \right) \leq (e(1-1/2))^{-r} = (2/e)^{r}
+\]
+The bound from Markov is
+\[
+P\left(X \geq \frac{2r}{\lambda} \right) \leq \frac{E(X)}{2r/\lambda} = \frac{r/\lambda}{2r/\lambda} = \frac{1}{2}
+\]
+\end{enumerate}
+
+\paragraph{\#4.}
+\begin{proof}
+\begin{enumerate}
+\item[a)] 
+
+
+
+
+  \begin{enumerate}
+	  \item[i.] Since R uses 
+    \[
+    P(X = k) = \binom{n-1+k}{n-1} q^{k} p^{n}
+    \]
+    as the PDF for $X \sim$ NBin($n$, $p$), we have that $P(X \leq 310)$, for $X \sim$ NBin(100,1/4) gives the probability that we need to wait at most 410 trials for 100 success. The following code finds the complement of that probability to be 0.3693 
+    
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+p <- 1/4
+num_of_heads <- 100
+prob_of_410_or_less <- \hlfunctioncall{pnbinom}(q=310,size=num_of_heads,prob=p)
+prob_of_411_or_more <- 1 - prob_of_410_or_less
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+    
+	\item[ii.] Since we know that geometric random variables are special cases of negative binomials, and in particular, $X \sim$ NBin($n,p$) implies that $X = \SUM{i}{1}{n} G_i$ where $G_i \iid$ Geo($p$), then via the central limit theorem
+  
+
+
+  
+	\begin{align*}
+	P( X \geq 411 ) &= P\left( \frac{1}{100} \SUM{i}{1}{100} G_i \geq 4.11 \right) \\
+	&= P\left( \frac{\bar{G}_{(100)} - 1/p}{\sigma/\sqrt{n}} \geq \frac{4.11 - 4}{\sqrt{(3/4)(1/4)^{-2}}/10} \right) \\
+	&\approx P(Z \geq 0.3175) \\
+	&= 1-\Phi(0.3175) \\
+	&= 0.3754
+	\end{align*}
+	Where $G_i \iid$ Geo$(1/4)$ and hence $\sigma = \sqrt{12}$ and $Z \sim$ N(0,1). This is without any correction. To use a correction, we'll consider shifting 411 down to 410.5, and looking at 
+
+
+\[
+  P( X \geq 411 ) \approx P\left( \frac{1}{100} \SUM{i}{1}{100} G_i \geq 4.105 \right) \approx  P(Z \geq 0.3031) = 0.3809
+\]
+	\end{enumerate}
+\item[b)]
+  \begin{enumerate}
+  \item[i.] The chance that the 100th heads is on the 410th toss is found via
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlfunctioncall{dnbinom}(x=310,size=100,prob=1/4)
+\end{alltt}
+\begin{verbatim}
+[1] 0.01073
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+  \item[ii.] As in part ii. of part a), we'll beg to the CLT:
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+n <- 100
+p <- 1/4
+q <- 1 - p
+sigma <- \hlfunctioncall{sqrt}(q/p^2)
+z1 <- (409.5/n - 1/p)/(sigma/\hlfunctioncall{sqrt}(n))
+z2 <- (410.5/n - 1/p)/(sigma/\hlfunctioncall{sqrt}(n))
+\hlfunctioncall{pnorm}(z2) - \hlfunctioncall{pnorm}(z1)
+\end{alltt}
+\begin{verbatim}
+[1] 0.01105
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+  Hence, 
+  \[
+  P(X = 410) = P\left( 409.5 < X < 410.5 \right) = \Phi(0.3031) - \Phi(0.2742) = 0.011
+  \]
+  \end{enumerate}
+\end{enumerate}
+\end{proof}
+
+\newcommand{\Xn}{\overline{X}_{(n)}}
+
+\paragraph{\#5.}
+\begin{proof}
+\begin{enumerate}
+\item[a)] So, $n$ large puts us in position to use a version of the central limit theorem. 
+\begin{align*}
+P( \Xn - c_n \leq \mu \leq \Xn + c_n) &= 1 - \left( P(\Xn < \mu - c_n) + P(X_n > \mu + c_n) \right) \\
+&= 1 - \left( P\left( \frac{\Xn - \mu}{\sigma/\sqrt{n}} < -\frac{c_n \sqrt{n}}{\sigma} \right) + 1 - P\left( \frac{\Xn - \mu}{\sigma/\sqrt{n}} \leq \frac{c_n \sqrt{n}}{\sigma} \right) \right)\\
+&\approx 1 - \left( \Phi\left(-\frac{c_n \sqrt{n}}{\sigma}\right) + 1-\Phi\left(\frac{c_n \sqrt{n}}{\sigma}\right) \right) \\
+&= 1 - 2\Phi\left(-\frac{c_n \sqrt{n}}{\sigma}\right) = 1 - 2 \Phi(-z)
+\end{align*}
+Thus, solving for $z$ such that $1-2\Phi(-z) \approx 95\% \EQ \Phi(-z) \approx 2.5\%$ and letting $c_n = z\sigma/\sqrt{n}$ will give us our desired constant. Using a normal table, we have that $1-\Phi(1.96) = 0.025$, so setting $c_n = 1.96 \sigma/\sqrt{n}$ does the trick.
+% 
+% Note that \[\Xn - c_n \leq \mu \leq \Xn + c_n \EQ \ord{\mu - \Xn} \leq c_n \EQ \ord{\Xn - \mu} \leq c_n\]
+% and that $E(\Xn) = \mu$ and $SD(\Xn) = \sigma/\sqrt{n}$. Thus, Chebyshev says that 
+% \[
+% P(\ord{\Xn - \mu} \geq k\sigma/\sqrt{n}) \leq \frac{1}{k^2}
+% \]
+% which means that taking $c_n = k \sigma/\sqrt{n} = \sigma/\sqrt{.05n}$, yields the bound
+% \[
+% P(\ord{\Xn - \mu} \geq c_n) \leq 5\% \EQ P(\ord{\Xn - \mu} \leq c_n) \geq 95\%
+% \]
+\item[b)] Using the result that $c_n = 1.96 \sigma/\sqrt{n}$ from above, we know that to obtain a confidence interval of width no larger than .01, $2 c_n \leq 0.01$. That is, 
+\[
+2 c_n \leq 0.01 \EQ \frac{2\cdot 1.96 \cdot \sigma}{0.01} \leq \sqrt{n} \EQ 392^2 \sigma^2 \leq n
+\]
+Since this holds for arbitrary $\sigma^2$, it must be that $n \geq \sup_{\sigma^2} 392^2 \sigma^2$ and we saw earlier that for a bernoulli trial with success rate $p$, $\sigma^2$ is maximal at $p = 1/2$. Thus, $n \geq 392^2/4 = 38,416$. 
+\end{enumerate}
+\end{proof}
+
+\paragraph{\#6.}
+\begin{proof}
+Given $X_1, X_2, \ldots $ iid with mean $\mu$ (and assuming $\psi_{X_i}$ exists), we have
+\[
+\psi_{\Xn}(t) = \prod_{i=1}^{n} \psi_{\frac{1}{n}X_i}(t) = \prod_{i=1}^{n} \psi_{X_i}(t/n) = \psi_{X_1}(t/n)^{n}
+\]
+Expanding $\psi_{X}(t)$ in a Maclaurin series, we have that
+\[
+\psi_{X}(t) = 1 + \mu t + o(t)
+\]
+Hence, 
+\begin{align*}
+\psi_{X_1}(t/n)^n &= \left(1 + \frac{\mu t}{n} + o\left(\frac{\mu t}{n}\right)\right)^{n} \\
+&= \left(1 + \frac{ \mu t + n o\left(\frac{\mu t}{n}\right)}{n} \right)^{n}
+\intertext{Thus,}
+\lim_{n\to\infty} \psi_{X_1}(t/n)^n &=  \lim_{n\to\infty}\left(1 + \frac{ \mu t + a_n}{n} \right)^{n} \\
+&= e^{\mu t + a}
+\intertext{where $a_n \to a$. However,}
+a &= \lim_{n\to\infty} n o\left(\frac{\mu t}{n}\right) \\
+ &= \lim_{n\to\infty} \frac{o \left( \frac{\mu t}{n} \right)}{1/n} \\
+ &= \lim_{x \to 0} \frac{o(x)}{x} =  0
+\end{align*}
+Hence, $\psi_{\Xn}(t) = \psi_{X_1}(t/n)^n \to e^{\mu t}$ which is the mgf of the constant $\mu$. 
+\end{proof}
+
+\end{document}

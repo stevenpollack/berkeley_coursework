@@ -1,0 +1,290 @@
+\documentclass[12pt,titlepage]{article}
+
+\usepackage{mcgill,palatino,fancyhdr}
+
+\lhead{STAT201A -- Sec. 102}
+\chead{HW \#1.}
+\rhead{Steven Pollack -- 24112977}
+\cfoot{\thepage}
+
+\title{STAT201A -- Sec. 102 \\ Homework \#1}
+\author{Steven Pollack \\ 24112977}
+\date{}
+
+\begin{document}
+\maketitle
+
+\pagestyle{empty}
+\newpage
+\pagestyle{fancy}
+
+\paragraph{\#1.} \textbf{Useful bounds.} Let $A_1, A_2, \ldots, A_n$ be events.
+\begin{enumerate}
+\item[a)] Prove \textbf{Boole's Inequality} for two events: $P(A_1 \cup A_2) \leq P(A_1) + P(A_2)$
+\item[b)] Use $a)$ and induction to prove Boole's inequality for $n$ events:
+\[
+P\left( \bigcup_{i=1}^{n} A_i \right) \leq \SUM{i}{1}{n} P(A_i)
+\]
+This is also known as the first Bonferroni inequality. Bonferroni gave a further sequence of bounds, using the inclusion-exclusion formulas. The first one of those is Lemma 1.6.
+\end{enumerate}
+
+\begin{proof}
+\begin{enumerate}
+\item[a)] 
+Observe that for any $A_1, A_2$, events:
+\[
+A_1 = (A_1 \setminus A_2) \sqcup (A_1 \cap A_2)
+\]
+Hence,
+\[
+P(A_1) = P(A_1 \setminus A_2) + P(A_1 \cap A_2) \EQ P(A_1 \setminus A_2) = P(A_1) - P(A_1 \cap A_2)
+\]
+Thus, from the identity
+\[
+A_1 \cup A_2 = (A_1 \setminus A_2) \sqcup (A_2 \setminus A_1) \sqcup (A_1 \cap A_2)
+\]
+we have 
+\begin{align*}
+P(A_1 \cup A_2) &= \biggl(P(A_1) - P(A_1 \cap A_2)\biggr) + \biggl(P(A_2) - P(A_2 \cap A_1)\biggr) + P(A_1 \cap A_2) \\
+&= P(A_1) + P(A_2) - P(A_1 \cap A_2) \\
+&\leq P(A_1) + P(A_2)
+\end{align*}
+\item[b)]Provided that 
+\[
+P\left( \bigcup_{i=1}^{n-1} A_i \right) \leq \SUM{i}{1}{n-1} P(A_i)
+\]
+we set $B = \bigcup_{i=1}^{n-1} A_i$, and note that
+\[
+\bigcup_{i=1}^{n} A_i = B \cup A_{n}
+\]
+Hence, from part a) and our induction hypothesis
+\[
+P(B \cup A_n) \leq P(B) + P(A_n) \leq \SUM{i}{1}{n-1} P(A_i) + P(A_n)
+\]
+That is, 
+\[
+P\left( \bigcup_{i=1}^{n} A_i \right) \leq \SUM{i}{1}{n} P(A_i)
+\]
+\end{enumerate}
+\end{proof}
+
+\paragraph{\#2.} Here are a couple of standard uses of what you proved above.
+\begin{enumerate}
+\item[a)] A professor will be at a conference next Wednesday, Thursday and Friday. The weather report for the city where the conference is being held says that the chance of rain is 
+
+\begin{center}
+\begin{tabular}{c|c|c}
+Wednesday & Thursday & Friday \\
+\hline 
+10\% & 20\% & 25\%
+\end{tabular}
+\end{center}
+Fill in the blanks with the sharpest bounds you can find:
+
+The chance that it rains sometime during those three days is at least \verb|________| and at most \verb|________|.
+
+\item[b)] Suppose that I place $n$ bets, and that I have a chance $p_i$ of winning bet $i$ for $1 \leq i \leq n$. Rather greedily, I want to know the chance that I win all the bets. The trouble is that the bets are all dependent on each other in various complicated ways, so there's no straightforward calculation that I win them all. So fill in the blank with a lower bound: the chance that I win all the bets is at least \verb|________|.
+
+[Notice that the bound is only interesting when the $p_i$'s are large. It is frequently used in statistics, for example in situations where several different quantities are predicted using the same data and you need some idea about the chance that all the predictions are good. This is called \textit{Bonferroni's Method}.]
+\end{enumerate}
+
+\begin{proof}
+\begin{enumerate}
+\item[a)] If $W,T,F$ represent the events that it rains on Wednesday, Thursday, and Friday (respectively), then the table above says that $P(W) = 0.1$, $P(T) = 0.2$ and $P(F) = 0.25$. Whence, \#1.b says that 
+\[
+P(W \cup T \cup F) \leq P(W) + P(T) + P(F) = 55\%
+\]
+That is, the chance of rain during these three days is \textit{at most} 55\%. Now, from the table, we also see that the chance of rain during the three day period can be \textit{no less} than 25\%, since -- at the very least -- we expect the least-rain scenario to be one day of rain, and the best chance for that is $\max\set{P(W),P(T),P(F)} = P(F) =$ 25\%.
+
+\item[b)] If $A_i$ is the event that you win bet $i$, then $P(\bigcap_{i=1}^{n} A_i)$ is the event that you will all events. However, from de Morgan's laws:
+\begin{align*}
+P\left(\bigcap_{i=1}^{n} A_i\right) &= 1- P\left[ \left( \bigcap_{i=1}^{n} A_i\right)^{c} \right] \\
+&= 1- P\left( \bigcup_{i=1}^{n} A_{i}^{c} \right) \\
+&\geq 1 - \SUM{i}{1}{n} P(A_i^c) \\
+&= 1 - \SUM{i}{1}{n} (1-p_i) \\
+&= 1 - n + \SUM{i}{1}{n} p_{i} 
+\end{align*}
+Hence, the chance you win all your bets is at least $1-n + \SUM{i}{1}{n} p_i$. 
+\end{enumerate}
+\end{proof}
+
+\paragraph{\#1.10.7} Let $A_1, A_2, \ldots$ be events. Show that
+\[
+P\left( \bigcup_{n=1}^{\infty} A_n \right) \leq \SUM{n}{1}{\infty} P(A_n)
+\]
+\Hint Define $B_n = A_n \setminus \bigcup_{i=1}^{n-1} A_i$. Then, show that the $B_n$ are disjoint and that $\bigcup_{n=1}^{\infty} A_n = \bigcup_{n=1}^{\infty} B_n$. 
+
+\begin{proof}
+As the hint suggests: set $B_n = A_n \setminus \bigcup_{i=1}^{n-1} A_i $. So, $B_1 = A_1$, $B_2 = A_2 \setminus A_1$, $B_3 = A_3 \setminus (A_1 \bigcup A_2)$, etc. 
+
+Now, it's clear that if $C_n = \bigcup_{i=1}^{n} A_i$, then $C_1 \subseteq C_2 \subseteq \cdots$, and thus $C_{1}^{c} \supseteq C_{2}^{c} \supseteq \cdots$. 
+
+Hence, using the identity 
+\[
+B_n = A_n \setminus \bigcup_{i=1}^{n-1}A_i = A_n \cap \left( \bigcup_{i=1}^{n-1} A_i \right)^{c} = A_n \cap C_{n-1}^{c}
+\]
+it follows that, for $i \leq j$,
+\begin{align*}
+B_i \cap B_j &= A_i \cap A_j \cap \left( C_{i-1}^{c} \cap C_{j-1}^{c}\right) \\
+&= A_j \cap \left(A_i \cap C_{j-1}^{c} \right) \\
+&= A_j \cap \nullset \\
+&= \nullset
+\end{align*}
+since $C_{j-1}^{c} \subseteq C_{i-1}^{c} \subseteq A_{i}^{c}$. This establishes the mutual exclusivity of the $B_i$'s. To, show that $\bigcup_{i=1}^{\infty} B_i = \bigcup_{i=1}^{\infty} A_i$, we observe that $B_1 = A_1$, and suppose $\bigcup_{i=1}^{n-1} B_i = \bigcup_{i=1}^{n-1} A_i$. Using this hypothesis:
+\begin{align*}
+\bigcup_{i=1}^{n} B_i &= B_n \cup \bigcup_{i=1}^{n-1} B_i \\
+&= B_n \cup \bigcup_{i=1}^{n-1} A_i \\
+&= \left( A_n \setminus \bigcup_{i=1}^{n-1} A_i \right) \cup \bigcup_{i=1}^{n-1} A_i \\
+&= \bigcup_{i=1}^{n} A_i
+\end{align*}
+Hence, our simple induction shows that 
+\[
+\bigcup_{i=1}^{\infty} B_i = \bigcup_{i=1}^{\infty} A_i
+\]
+Finally, we (re)consider the definition of $B_n$ to conclude that $B_n \subset A_n$ and therefore $P(B_n) \leq P(A_n)$. So, 
+\[
+P\left( \bigcup_{i=1}^{\infty} A_i \right) = P\left( \bigsqcup_{i=1}^{\infty} B_n \right) = \SUM{i}{1}{\infty} P(B_i) \leq \SUM{i}{1}{\infty} P(A_i)
+\]
+\end{proof}
+
+\paragraph{\#1.10.4} Let $\set{A_i : i \in I}$ be a collection of events where $I$ is an arbitrary index set. Show that
+\[
+\left( \bigcup_{i \in I} A_i \right)^{c} = \bigcap_{i\in I} A_{i}^{c} \quad \text{ and } \quad \left( \bigcap_{i\in I}  A_i \right)^{c} = \bigcup_{i \in I} A_{i}^{c}
+\]
+
+\begin{proof}
+I'll show this for two arbitrary sets $A$ and $B$ and the general result will follow immediately. 
+
+Suppose $x \in (A \cup B)^{c}$, 
+\begin{align*}
+x \in (A \cup B)^{c} &\EQ x \not\in (A \cup B) \\
+&\EQ \text{$x$ is neither in $A$ nor $B$} \\
+&\EQ x \not\in A \text{ and } x \not\in B \\
+&\EQ x \in A^{c} \text{ and } x \in B^{c} \\
+&\EQ x \in A^{c} \cap B^{c}
+\end{align*}
+That is, $(A \cup B)^{c} = A^{c} \cap B^{c}$. 
+
+Now, if $x \in A^{c} \cup B^{c}$, 
+\begin{align*}
+x \in A^{c} \cup B^{c} &\EQ x \in A^{c} \text{ or } x \in B^{c} \\
+&\EQ x \not\in A \text{ or } x \not\in B
+\end{align*}
+However, if $x \in (A \cap B)$ then $x \in A$ and that would contradict our assumption. So, $A^{c} \cup B^{c} \subseteq (A \cap B)^{c}$. Conversely, 
+\begin{align*}
+x \in (A \cap B)^{c} &\EQ x \not\in (A \cap B)
+\end{align*}
+and if $x \not\in (A^{c} \cup B^{c})$, then from our previous result $x \in A \cap B$ and this would (again) contradict our assumption. Hence, $ (A \cap B)^{c} \subseteq A^{c} \cup B^{c}$. This demonstrates that $(A \cap B)^{c} = A^{c} \cup B^{c}$, which completes the proof.
+\end{proof}
+
+\paragraph{\#1.10.8.} Suppose that $P(A_i)=1$ for each $i$. Prove that
+\[
+P\left( \bigcap_{i=1}^{\infty} A_i \right) = 1
+\]
+
+\begin{proof}
+First, the law of complementation shows that $P(A_i^{c}) = 0$ for each $i$. Hence, 
+\[
+0 \leq P\left( \bigcup_{i=1}^{\infty} A_i^{c} \right) \leq \SUM{i}{1}{\infty} P(A_{i}^{c}) = 0
+\]
+Which is to say that $P\left(\bigcup_{i=1}^{\infty} A_{i}^{c} \right) = 0$. However, another use of the law of complements shows that
+\[
+P\left(\bigcap_{i=1}^{\infty} A_{i}\right) = 1 - P\left(\left[ \bigcap_{i=1}^{\infty} A_i \right]^{c} \right) = 1 - P\left( \bigcup_{i=1}^{\infty} A_i^{c}  \right) = 1
+\]
+\end{proof}
+
+\paragraph{\#6.}
+\begin{enumerate}
+\item[a)] How many shuffles are there? In how many shuffles is the 17th card red? What is the chance that the 17th card is red? Does the number 17 appear in your answer?
+\item[b)] I deal a poker hand. That's 5 cards dealt at random without replacement from the deck. What is the chance that the last two cards that I deal are aces? How would your answer have been affected had I dealt a bridge hand (13 cards) instead of a poker hand?
+\item[c)] I shuffle a deck and deal all the cards one by one. What is the chance that the ace of spaces appears before all the red cards?
+\end{enumerate}
+
+\begin{proof}
+\begin{enumerate}
+\item[a)] Since there are 52 options for the first card, 51 options for the second, 50 options for the third, etc. We have 52$!$ ways to shuffle the deck. 
+
+Now, consider holding one of the 26 red cards in the 17th position, and counting the ways the deck can be shuffled ``around'' this card. You have 51 options in the first slot, 50 options in the second, 49 in the third, \ldots, 35 options in the sixteenth, 26 options in the seventeenth, 34 options in the eighteenth, \ldots. The number is $51! \times 26 = 52!/2$. Hence, the chance that the 17th card is read is 
+\[
+\frac{52!/2}{52!} = \frac{1}{2}
+\]
+And this makes perfect sense, since drawing a card at random yields a 50/50 chance of it being red and there's (combinatorially) no difference between the first and seventeenth card.
+\item[b)] 
+Instead of looking at hands, lets look at valid deck shuffles, engineering the top five cards towards our desired configuration. We first start by selecting two aces from the deck and setting them aside. We notice that if put the aces back into the deck, but in the fourth and fifth position, then the top card has 50 possible values, the second has 49, the third has 48, but the fourth has 2 and the fifth has but one. The sixth has 47, seventh 46, etc. Meaning, this deck has
+\[
+50 \times 49 \times 48 \times 2 \times 1 \times 47! = 2 \times 50!
+\]
+ways to be constructed. However, we can do this with 6 different pairs of aces, so there are $6 \times 2 \times 50!$ valid deck shuffles that would yield desired hands. Hence, the chance of being dealt two aces in the back of your five card hand is
+\[
+\frac{6 \times 2 \times 50!}{52!} = \frac{12}{52\times 51} \approx 0.452\%
+\]
+
+This construction easily applies to the situation where you're being dealt a bridge hand: just sneak your two aces in the 12th and 13th position, instead of the 4th and 5th. The resulting counting argument yields the same number of valid deck configurations and thus the probability remains unchanged.
+\item[c)] We'll count the number of shuffles that satisfy our prescribed configuration by ``building'' our deck up from scratch. 
+
+First, lay out your 26 red cards (there are $26!$ ways to do this) and position your ace amongst the red cards such that it is either between two red cards, or in front of all of them (there are exactly 26 ways to do this). Now, take your first black card, and place it in any of the 27 new spots. Placing this card down gives us a deck with 28 cards, and thus 29 positions to place our next black card. Proceeding this way, we may build any deck which has the ace of spades before the all of the red cards. The number of such valid decks is
+\[
+26! \times 26 \times \prod_{i=0}^{24}(28+i) = 26! \times 26 \times [52]_{24} = \frac{26 \times 52!}{27}
+\]
+Hence, the chance of finding a deck, shuffled in this configuration is 
+\[
+\frac{26 \times 52!/27}{52!} = \frac{26}{27}
+\]
+\end{enumerate}
+\end{proof}
+
+\paragraph{\#7. Look, no algebra!} The \textit{combinatorial method} uses counting arguments to prove algebraic facts. It can be fast, elegant, and revealing. Let $n$ be a positive integer. 
+\begin{enumerate}
+\item[a)] Show, simply by counting the same thing in two different ways, without using any \textbf{factorial formulas}, that
+\[
+\binom{2n}{2} = 2\binom{n}{2} + n^2
+\]
+\item[b)] Use a combinatorial argument to show that
+\[
+\binom{2n}{n} = \SUM{k}{0}{n} \binom{n}{k}\binom{n}{n-k}
+\]
+\end{enumerate}
+
+\begin{proof}
+\begin{enumerate}
+\item[a)]
+Consider the sets $X = \set{x_1, x_2 \ldots, x_n}$ and $Y = \set{y_1, y_2, \ldots, y_n}$ and their union $Z = X \sqcup Y$. 
+The pairing of elements from $Z$ is clearly $\binom{2n}{2}$, however lets consider building those pairings from $X$, alone. 
+
+First, consider the $\binom{n}{2}$ pairings we may make from $X$, and for every $(x_i, x_j)$ ($i\neq j$) consider $(x_j,x_i)$ to be a place-holder for the pair $(y_j, x_i)$. Thereby enlarging our initial $\binom{n}{2}$ collection to $2 \binom{n}{2}$. At this point, we need to add $n$ elements of the form $(x_i, y_i)$ as well as the $n\times (n-1)$ elements of the form $(y_i, y_j)$ ($i\neq j$). Thus, we've made $\binom{2n}{2}$ pairs, by doubling our initial $\binom{n}{2}$ and then adding $n + n(n-1) = n^2$ extra elements. That is,
+\[
+\binom{2n}{2} = 2 \binom{n}{2} + n^2
+\]
+\item[b)] Suppose you had two fish bowls filled with $n$ distinguishable marbles, each. Further, suppose you wanted to look at all the collections of marbles you could make by drawing only $n$ marbles total from both bowls. One way to make a collection is to draw $n$ from the first bowl (effectively exhausting it). Another is to draw $n-1$ from the first, and just one from the second. Or, draw $n-2$ from the first, and two from the second. Continuing in this fashion, we count the total number of collections that can be made to be
+\[
+\SUM{k}{0}{n} \binom{n}{k}\binom{n}{n-k}
+\]
+But it's clear that if we had dumped one bowl's marbles into the other and considered collections made from drawing $n$ marbles from this set we would experience the same outcomes. The number of outcomes of this experiment is known to be $\binom{2n}{n}$ and thus we see that
+\[
+\binom{2n}{n} = \SUM{k}{0}{n} \binom{n}{k}\binom{n}{n-k}
+\]
+
+\end{enumerate}
+
+\end{proof}
+
+
+\paragraph{\#8.} A coin that lands heads with probability $p$ is tossed repeatedly. Let $k$ be a positive integer and let $T$ be the number of tosses till there are at least $k$ heads and at least $k$ tails. Find the distribution of $T$. 
+
+[\Hint As always, when finding a distribution, start by working out the possible values of $T$ then think about what must happen on the last toss.]
+
+\begin{proof}
+So my first assumption is that when we consider valid events in the set $T^{-1}(\set{x})$, we're looking at events whose last toss was necessary to fulfill the ``at least'' requirement, not exceed it. For instance, if $k=3$ and $\omega \in T^{-1}(\set{8})$, then one potential value for $\omega$ is
+\[
+\omega = (HHHHTTHT)
+\]
+However, we will not consider $\omega = (HTTHTHTH)$ to be an element of $T^{-1}(\set{8})$. That being said, for fixed integers $k,x$, we can count $T^{-1}(\set{x})$ by first considering the $\omega$ whose last toss yielded a tails and then the omega whose last toss yielded a heads (a symmetry argument yields the latter from the former). It should be noted, however, that $T^{-1}(\set{y}) = \nullset$ for $ y < 2k$ as the requirement that there be at least $k$ heads and tails requires at least $2k$ tosses to be made.
+
+So, because $\omega \in T^{-1}(\set{x})$ with its last toss yielding a tails requires $k-1$ tails to be distributed among $x-k$ heads, we have that there are $\binom{x-k}{k-1}$ such $\omega$, and probability of observing any single one is $p^{x-k}q^{k}$. Using our counting argument, and the symmetrical nature of this analysis, we have that
+\[
+P(T = x;k) = \binom{x-k}{k-1}\left(p^{x-k}q^{k} + p^{k}q^{x-k}\right) \qquad x = 2k, 2k+1, \ldots
+\]
+
+\end{proof}
+
+\end{document}
